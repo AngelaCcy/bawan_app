@@ -32,5 +32,6 @@ The application is live and accessible at:
    ```bash
    git clone https://github.com/AngelaCcy/bawan.git
    cd bawan
+   pnpm i
    pnpm dev
    ```
