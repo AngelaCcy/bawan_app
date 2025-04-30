@@ -2,55 +2,50 @@
 
 export const mainNavLinks = [
   {
-    title: "ALL 全部商品",
-    url: "/productsAction",
-    // icon: SquareFunction,
+    title: "全部商品",
+    url: "/products",
   },
-  { title: "New 新品", url: "/productsAPI" },
-  { title: "Sale 促銷品", url: "/productsAPI" },
-  { title: "Makeup 美妝", url: "/productsAPI" },
-  { title: "Fragrance 香水", url: "/productsAPI" },
-  { title: "Skincare 保養品", url: "/productsAPI" },
-  { title: "Haircare 美髮", url: "/productsAPI" },
-  { title: "Body 身體", url: "/productsAPI" },
-  { title: "Brands 所有品牌", url: "/productsAPI" },
+  { title: "新品", url: "/new" },
+  { title: "特價品", url: "/sale" },
+  { title: "美妝", url: "/beauty" },
+  { title: "香水", url: "/perfume" },
+  { title: "保養品", url: "/skincare" },
+  { title: "髮品", url: "/hair" },
+  { title: "身體", url: "/body" },
+  { title: "所有品牌", url: "/brands" },
 ];
 
 export const footerLinks = [
   {
-    title: "Shop",
+    title: "關於我們",
     links: [
-      { title: "New Arrivals", url: "/" },
-      { title: "Best Sellers", url: "/" },
-      { title: "Sales", url: "/" },
-      { title: "Categories", url: "/" },
+      { title: "認識我們", url: "/" },
+      { title: "會員制度", url: "/" },
+      { title: "網站使用條款＆隱私權政策", url: "/" },
     ],
   },
   {
-    title: "Support",
+    title: "顧客服務",
     links: [
-      { title: "Customer Service", url: "/" },
-      { title: "Returns & Exchanges", url: "/" },
-      { title: "Shipping Information", url: "/" },
-      { title: "Size Guide", url: "/" },
+      { title: "常見問題", url: "/" },
+      { title: "運送說明", url: "/" },
+      { title: "付款說明", url: "/" },
+      { title: "退換貨說明", url: "/" },
+      { title: "聯絡我們", url: "/" },
     ],
   },
   {
-    title: "Company",
+    title: "追蹤我們",
     links: [
-      { title: "About Us", url: "/" },
-      { title: "Careers", url: "/" },
-      { title: "Blog", url: "/" },
-      { title: "Affiliate Program", url: "/" },
-    ],
-  },
-  {
-    title: "Socials",
-    links: [
-      { title: "Instagram", url: "/" },
-      { title: "Twitter", url: "/" },
-      { title: "Facebook", url: "/" },
-      { title: "Pinterest", url: "/" },
+      {
+        title: "Instagram",
+        url: "https://www.instagram.com/bawancheapgo?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==",
+      },
+      { title: "LINE", url: "https://line.me/ti/p/DmJPJC2Kz5" },
+      {
+        title: "蝦皮",
+        url: "https://shopee.tw/wendy22258?categoryId=100630&entryPoint=ShopByPDP&itemId=10134129014&upstream=search",
+      },
     ],
   },
 ];
