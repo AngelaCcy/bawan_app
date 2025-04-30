@@ -30,7 +30,7 @@ The application is live and accessible at:
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/your-username/bawan.git
+   git clone https://github.com/AngelaCcy/bawan.git
    cd bawan
    pnpm dev
    ```
