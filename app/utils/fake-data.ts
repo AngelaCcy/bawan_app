@@ -10,9 +10,9 @@ export const ProductSchema = z.object({
   id: z.number(),
   brand: z.string().min(1, { message: "Title is required" }),
   title: z.string().min(1, { message: "Title is required" }),
-  price: z.number().min(1, { message: "Price is required" }),
-  salePrice: z.number().nullable(),
-  size: z.string().array(),
+  priceBySize: z.record(z.string(), z.number()),
+  salePriceBySize: z.record(z.string(), z.number()).nullable(),
+  sizes: z.string().array(),
   description: z.string().min(1, { message: "Description is required" }),
   category: z.string().min(1, { message: "Category is required" }),
   images: z.string().array(),
@@ -24,9 +24,9 @@ export interface SaleProduct {
   id: number;
   brand: string;
   title: string;
-  price: number;
-  salePrice: number | null;
-  size: string[];
+  priceBySize: Record<string, number>;
+  salePriceBySize: Record<string, number> | null;
+  sizes: string[];
   description: string;
   // discountPercentage: number;
   // rating: number;
@@ -42,9 +42,13 @@ export const FAKE_PRODUCT_DATA: Product[] = [
     id: 1,
     brand: "SK-II",
     title: "超能精華王者 青春露",
-    price: 4235,
-    salePrice: 3599,
-    size: ["250ml"],
+    priceBySize: {
+      "250ml": 4235,
+    },
+    salePriceBySize: {
+      "250ml": 3599,
+    },
+    sizes: ["250ml"],
     description:
       "Your perfect pack for everyday use and walks in the forest. Stash your laptop (up to 15 inches) in the padded sleeve, your everyday",
     category: "men's clothing",
@@ -54,9 +58,13 @@ export const FAKE_PRODUCT_DATA: Product[] = [
     id: 2,
     brand: "LE LABO",
     title: "THÉ MATCHA 末茶 26",
-    price: 3250,
-    salePrice: null,
-    size: ["15ml", "50ml", "100ml"],
+    priceBySize: {
+      "15ml": 3250,
+      "50ml": 7450,
+      "100ml": 10650,
+    },
+    salePriceBySize: null,
+    sizes: ["15ml", "50ml", "100ml"],
     description:
       "Slim-fitting style, contrast raglan long sleeve, three-button henley placket, light weight & soft fabric for breathable and comfortable wearing. And Solid stitched shirts with round neck made for durability and a great fit for casual fashion wear and diehard baseball fans. The Henley style round neckline includes a three-button placket.",
     category: "men's clothing",
@@ -66,9 +74,12 @@ export const FAKE_PRODUCT_DATA: Product[] = [
     id: 3,
     brand: "AVEDA",
     title: "木質髮梳",
-    price: 1100,
-    salePrice: null,
-    size: ["小款", "大款"],
+    priceBySize: {
+      小款: 1100,
+      大款: 1400,
+    },
+    salePriceBySize: null,
+    sizes: ["小款", "大款"],
     description:
       "great outerwear jackets for Spring/Autumn/Winter, suitable for many occasions, such as working, hiking, camping, mountain/rock climbing, cycling, traveling or other outdoors. Good gift choice for you or your family member. A warm hearted love to Father, husband or son in this thanksgiving or Christmas Day.",
     category: "men's clothing",
@@ -88,9 +99,9 @@ export const FAKE_BANNER_MESSAGES: string[] = [
 export function sortByPrice(direction: Direction, data: Product[]) {
   return data.sort((a, b) => {
     if (direction === "ASC") {
-      return a.price - b.price;
+      return a.priceBySize[0] - b.priceBySize[0];
     } else {
-      return b.price - a.price;
+      return b.priceBySize[0] - a.priceBySize[0];
     }
   });
 }

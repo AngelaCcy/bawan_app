@@ -4,6 +4,7 @@ import { SaleProduct as Product } from "@/app/utils/fake-data";
 // import HeartButton from "../HeartButton";
 import { User } from "@prisma/client";
 import Link from "next/link";
+import { useState } from "react";
 
 interface Props {
   product: Product;
@@ -12,6 +13,9 @@ interface Props {
 
 // export default function ProductCard({ product, currentUser }: Props) {
 export default function ProductCard({ product }: Props) {
+  const [selectedSize, setSelectedSize] = useState<string>(product.sizes[0]);
+  const regularPrice = product.priceBySize[selectedSize];
+  const salePrice = product.salePriceBySize?.[selectedSize];
   // const addToCart = useCartStore((state) => state.addToCart);
 
   return (
@@ -31,23 +35,34 @@ export default function ProductCard({ product }: Props) {
           </h2>
           <h2 className="text-lg line-clamp-1">{product.title}</h2>
           <div className="mt-2">
-            <span className="border-black p-1 border-1 rounded-sm text-sm">
-              250ml
-            </span>
+            {product.sizes.map((size) => (
+              <button
+                key={size}
+                onClick={(e) => {
+                  e.preventDefault(); // to prevent Link navigation
+                  setSelectedSize(size);
+                }}
+                className={`border-black p-1 mr-1.5 border rounded-sm text-sm cursor-pointer hover:text-[#9E7C59] ${
+                  selectedSize === size ? "bg-[#D6CCC2]" : "bg-[#EDEDE9]"
+                }`}
+              >
+                {size}
+              </button>
+            ))}
           </div>
           <div className="mt-4 flex items-center justify-between">
-            {product.salePrice ? (
+            {salePrice ? (
               <div className="flex flex-col">
                 <span className="text-red-500 font-semibold">
-                  NT ${product.salePrice.toFixed(2)}
+                  NT ${salePrice.toFixed(2)}
                 </span>
                 <span className="text-gray-800 font-semibold text-sm line-through">
-                  NT ${product.price.toFixed(2)}
+                  NT ${regularPrice.toFixed(2)}
                 </span>
               </div>
             ) : (
               <span className="text-gray-800 font-semibold">
-                NT ${product.price.toFixed(2)}
+                NT ${regularPrice.toFixed(2)}
               </span>
             )}
           </div>
