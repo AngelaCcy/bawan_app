@@ -23,11 +23,11 @@ export default function UserBreadcrumb() {
   };
 
   return (
-    <Breadcrumb className="mt-25 md:mt-15">
+    <Breadcrumb className="mt-25 md:mt-18">
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink href="/">
-            <House className="size-5" />
+            <House className="size-6" />
           </BreadcrumbLink>
         </BreadcrumbItem>
 
@@ -41,9 +41,11 @@ export default function UserBreadcrumb() {
           return (
             <div key={href} className="flex items-center">
               <BreadcrumbSeparator />
-              <BreadcrumbItem>
+              <BreadcrumbItem className="text-[18px]">
                 {isLast ? (
-                  <BreadcrumbPage>{label}</BreadcrumbPage>
+                  <BreadcrumbPage className="ml-3 border-b-2 border-black">
+                    {label}
+                  </BreadcrumbPage>
                 ) : (
                   <BreadcrumbLink href={href}>{label}</BreadcrumbLink>
                 )}
