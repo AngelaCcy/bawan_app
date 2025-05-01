@@ -13,15 +13,18 @@ const MainNav = () => {
   const pathName = usePathname();
 
   return (
-    <div className="flex items-center lg:space-x-6 mx-4">
-      <button onClick={() => setMenuOpen(!menuOpen)} className="lg:hidden">
+    <div className="flex items-center lg:space-x-4 mx-4">
+      <button
+        onClick={() => setMenuOpen(!menuOpen)}
+        className="lg:hidden text-white"
+      >
         <Menu />
       </button>
       <div
         className={cn(
-          "absolute top-full left-0 w-full border bg-gray-100 dark:bg-gray-900",
-          "lg:border-none lg:static lg:flex lg:space-x-6",
-          menuOpen ? "block" : "hidden"
+          "absolute top-full left-0 w-full border dark:bg-gray-900",
+          "lg:border-none lg:static lg:flex lg:space-x-5",
+          menuOpen ? "block bg-navbar flex flex-col items-center" : "hidden"
         )}
       >
         {mainNavLinks.map((link) => (
@@ -29,13 +32,11 @@ const MainNav = () => {
             key={link.title}
             href={link.url}
             className={cn(
-              "block py-2 px-4 text-lg transition-colors flex items-center gap-2",
-              pathName === link.url
-                ? "text-black dark:text-white"
-                : "text-muted-foreground"
+              "block py-2 px-2 text-sm lg:text-lg transition-colors flex items-center gap-1 nav-icon whitespace-nowrap",
+              menuOpen ? "justify-center w-full" : "",
+              pathName === link.url ? "border-b-2 border-white" : ""
             )}
           >
-            {/* <link.icon /> */}
             {link.title}
           </Link>
         ))}

@@ -46,7 +46,7 @@
 }
 
 :root {
-  --background: oklch(1 0 0);
+  --background: #edede9;
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
@@ -79,6 +79,11 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --navbar: #d6ccc2;
+  --button: #9e7c59;
+  --button-hover: #8a6a4a;
+  --icon: #ffffff;
+  --icon-hover: #9e7c59;
 }
 
 .dark {
@@ -123,4 +128,24 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+body {
+  font-family: var(--font-noto-sans-tc), sans-serif;
+  background-color: #edede9;
+}
+
+/* Direct navbar styling */
+.bg-navbar {
+  background-color: #d6ccc2;
+}
+
+/* Add this at the end of the file */
+.nav-icon {
+  @apply mr-4 mt-1 transition-colors duration-200;
+  color: var(--icon);
+}
+
+.nav-icon:hover {
+  color: var(--icon-hover);
 }
