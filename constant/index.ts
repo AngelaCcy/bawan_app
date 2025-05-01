@@ -49,3 +49,42 @@ export const footerLinks = [
     ],
   },
 ];
+
+export const brands = [
+  {
+    id: "aveda",
+    label: "AVEDA",
+  },
+  {
+    id: "diptyque",
+    label: "Diptyque",
+  },
+  {
+    id: "lelabo",
+    label: "LE LABO",
+  },
+  {
+    id: "lancome",
+    label: "Lancôme",
+  },
+  {
+    id: "byredo",
+    label: "BYREDO",
+  },
+  {
+    id: "ysl",
+    label: "YSL",
+  },
+  {
+    id: "chanel",
+    label: "Chanel",
+  },
+  {
+    id: "bobbibrown",
+    label: "BOBBI BROWN",
+  },
+  {
+    id: "mac",
+    label: "MAC",
+  },
+];
