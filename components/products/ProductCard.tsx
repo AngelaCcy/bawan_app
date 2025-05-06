@@ -1,6 +1,7 @@
 import Image from "next/image";
 // import { useCartStore } from "@/app/stores/useCartStore";
-import { SaleProduct as Product } from "@/app/utils/fake-data";
+// import { SaleProduct as Product } from "@/app/utils/fake-data";
+import { Product } from "@prisma/client";
 // import HeartButton from "../HeartButton";
 import { User } from "@prisma/client";
 import Link from "next/link";
@@ -10,19 +11,23 @@ interface Props {
   product: Product;
   currentUser?: User | null;
 }
+type PriceMap = Record<string, number>;
 
 // export default function ProductCard({ product, currentUser }: Props) {
 export default function ProductCard({ product }: Props) {
   const [selectedSize, setSelectedSize] = useState<string>(product.sizes[0]);
-  const regularPrice = product.priceBySize[selectedSize];
-  const salePrice = product.salePriceBySize?.[selectedSize];
+  const priceBySize = product.priceBySize as PriceMap;
+  const salePriceBySize = product.salePriceBySize as PriceMap | undefined;
+
+  const regularPrice = priceBySize[selectedSize];
+  const salePrice = salePriceBySize?.[selectedSize];
   // const addToCart = useCartStore((state) => state.addToCart);
 
   return (
     <div className="hover:-animate-bounce-y bg-[#ECE2D0] rounded-lg shadow-md overflow-hidden hover:shadow-xl flex flex-col justify-between p-4 relative cursor-pointer">
       <Link href={`/products/${product.id}`} passHref>
         <Image
-          src={product.images[0]}
+          src={product.image[0]}
           alt={product.title}
           width={400}
           height={400}
@@ -54,15 +59,18 @@ export default function ProductCard({ product }: Props) {
             {salePrice ? (
               <div className="flex flex-col">
                 <span className="text-red-500 font-semibold">
-                  NT ${salePrice.toFixed(2)}
+                  NT ${salePrice}
+                  {/* NT ${salePrice.toFixed(2)} */}
                 </span>
                 <span className="text-gray-800 font-semibold text-sm line-through">
-                  NT ${regularPrice.toFixed(2)}
+                  NT ${regularPrice}
+                  {/* NT ${regularPrice.toFixed(2)} */}
                 </span>
               </div>
             ) : (
               <span className="text-gray-800 font-semibold">
-                NT ${regularPrice.toFixed(2)}
+                NT ${regularPrice}
+                {/* NT ${regularPrice.toFixed(2)} */}
               </span>
             )}
           </div>

@@ -34,10 +34,10 @@ const FilterBar = () => {
   }
 
   return (
-    <div className="my-8 text-[18px] pr-10">
+    <div className=" text-[18px] pr-35">
       <Button
         variant="custom"
-        className="p-5 mb-4 w-60 rounded-3xl text-[18px]"
+        className="p-5 mb-4 md:w-60 rounded-3xl md:text-[18px]"
       >
         清除全部篩選條件
       </Button>
