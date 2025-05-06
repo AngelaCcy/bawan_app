@@ -37,6 +37,8 @@ export interface SaleProduct {
   // quantity?: number;
 }
 
+export type PriceMap = Record<string, number>;
+
 export const FAKE_PRODUCT_DATA: Product[] = [
   {
     id: 1,
