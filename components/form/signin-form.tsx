@@ -1,14 +1,11 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-// 在最新版本的 react-dom 中，使用 useFormStatus 來管理表單狀態。
-// import { useFormStatus } from 'react-dom'
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 // Import sign in validation schema
 import { userSignInValidation } from "@/lib/validations/auth";
 import Link from "next/link";
-
 import { Button } from "@/components/ui/button";
 // Import shadcn Form related UI components
 import {
@@ -23,6 +20,9 @@ import { Input } from "@/components/ui/input";
 import { AuthButton } from "./SubmitButtons";
 import { GoogleSignin, MagicSignin, LineSignin } from "@/app/utils/authActions";
 import { Loader2 } from "lucide-react";
+import { checkUserExist } from "@/app/utils/actions";
+import { useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
 
 const SignInForm = () => {
   // const { pending } = useFormStatus()
@@ -31,17 +31,31 @@ const SignInForm = () => {
     resolver: zodResolver(userSignInValidation),
     defaultValues: {
       email: "",
-      password: "",
     },
   });
 
   const { handleSubmit, control, formState } = form;
   const { isSubmitting } = formState;
+  const router = useRouter();
 
   async function onSubmit(values: z.infer<typeof userSignInValidation>) {
     // console.log(values)
     // MagicSignin(values.email);
     console.log("Form submission started:", values);
+    try {
+      const userExist = await checkUserExist(values.email); // Ensure this function is awaited
+      console.log("User check completed.");
+      if (!userExist) {
+        toast("新朋友你好! 請先註冊資料喔！", {
+          icon: "👋🏻",
+        });
+        router.push("/signup");
+        return;
+      }
+    } catch (error) {
+      console.error("Error during submission:", error);
+    }
+
     try {
       await MagicSignin(values.email); // Ensure this function is awaited
       console.log("Form submission completed.");
@@ -71,19 +85,6 @@ const SignInForm = () => {
               </FormItem>
             )}
           />
-          <FormField
-            control={control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>密碼</FormLabel>
-                <FormControl className="border-black">
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
         </div>
         {isSubmitting ? (
           <Button
@@ -108,7 +109,7 @@ const SignInForm = () => {
       {/* 這是畫出 ------------ or ---------------- */}
       <div className="flex items-center justify-center my-4">
         <div className="border-b border-gray-400 w-full"></div>
-        <span className="px-2 text-black">or</span>
+        <span className="px-2 text-black">或</span>
         <div className="border-b border-gray-400 w-full"></div>
       </div>
       <form action={GoogleSignin} className="w-full pb-3">
@@ -118,9 +119,9 @@ const SignInForm = () => {
         <AuthButton provider="Line" />
       </form>
       <p className="text-center text-sm text-gray-600 mt-2">
-        Don&apos;t have an account?&nbsp;
+        還不是會員嗎？&nbsp;
         <Link className="text-blue-600 hover:underline" href="/signup">
-          Sign Up
+          現在註冊
         </Link>
       </p>
     </Form>
