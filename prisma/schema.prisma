@@ -8,23 +8,33 @@ datasource db {
 }
 
 model Product {
-  id          Int     @id @default(autoincrement())
-  title       String
-  price       Int
-  description String 
-  category    String   
-  image       String?
+  id                Int     @id @default(autoincrement())
+  brand             String
+  title             String
+  priceBySize       Json // stores { "250ml": 4235 }
+  salePriceBySize   Json? // null if not on sale
+  sizes             String[]
+  description       String 
+  rating            Int
+  stock             Int
+  category          String   
+  image             String[]
 }
 
 model User {
   id            String          @id @default(cuid())
   name          String?
+  gender        String
+  birth         DateTime
   email         String          @unique
   emailVerified DateTime?
+  phone         String
+  address       String
+  promotion     Boolean @default(false)
+  termAndCon    Boolean @default(false)
   image         String?
   accounts      Account[]
   sessions      Session[]
- 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   favoriteIds   String[]
