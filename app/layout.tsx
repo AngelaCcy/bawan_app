@@ -34,7 +34,7 @@ export default function RootLayout({
             <Navbar />
             <main className="min-h-screen flex flex-col justify-center items-center">
               <Toaster position="top-center" />
-              <div className="w-full pl-10">
+              <div className="w-full p-10 lg:pl-20">
                 <UserBreadcrumb />
               </div>
               {children}

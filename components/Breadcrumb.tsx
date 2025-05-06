@@ -24,7 +24,7 @@ export default function UserBreadcrumb() {
   };
 
   return (
-    <Breadcrumb className="mt-25">
+    <Breadcrumb className="lg:mt-15 mt-25">
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink href="/">

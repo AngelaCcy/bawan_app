@@ -5,7 +5,6 @@ import { Product } from "./fake-data";
 import { SaleProduct } from "@/app/utils/fake-data";
 import { auth } from "@/auth";
 import { User } from "@/lib/validations/auth";
-import { redirect } from "next/navigation";
 
 export async function getProducts() {
   const data = await prisma.product.findMany();

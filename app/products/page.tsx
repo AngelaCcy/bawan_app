@@ -4,7 +4,7 @@ import FilterBar from "@/components/filterBar";
 
 const Products = () => {
   return (
-    <div className="flex justify-between w-full px-10">
+    <div className="flex justify-center w-full px-10">
       <FilterBar />
       <ProductLists />
     </div>
