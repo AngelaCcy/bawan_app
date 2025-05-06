@@ -6,12 +6,12 @@ import { Product } from "@prisma/client";
 import { User } from "@prisma/client";
 import Link from "next/link";
 import { useState } from "react";
+import { PriceMap } from "@/app/utils/fake-data";
 
 interface Props {
   product: Product;
   currentUser?: User | null;
 }
-type PriceMap = Record<string, number>;
 
 // export default function ProductCard({ product, currentUser }: Props) {
 export default function ProductCard({ product }: Props) {
