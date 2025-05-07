@@ -1,6 +1,6 @@
 "use client";
 import ProductLists from "@/components/products/ProductLists";
-import FilterBar from "@/components/filterBar";
+import FilterBar from "@/components/products/filterBar";
 
 const Products = () => {
   return (

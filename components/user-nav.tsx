@@ -8,10 +8,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { FileHeart, UserRound, Search, ShoppingBag } from "lucide-react";
+import { FileHeart, UserRound, ShoppingBag } from "lucide-react";
 import { signOut } from "next-auth/react";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import { useEffect } from "react";
+import { SearchOverlay } from "@/components/SearchOverlay";
 
 const UserNav = () => {
   const { currentUser, fetchCurrtUser } = useCurrentUser();
@@ -30,9 +31,10 @@ const UserNav = () => {
 
   return (
     <div className="flex justify-center">
-      <Link href="/search">
+      <SearchOverlay />
+      {/* <Link href="/search">
         <Search className="nav-icon" />
-      </Link>
+      </Link> */}
       {currentUser ? (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
