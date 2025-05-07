@@ -47,7 +47,7 @@ export default function ProductCard({ product }: Props) {
                   e.preventDefault(); // to prevent Link navigation
                   setSelectedSize(size);
                 }}
-                className={`border-black p-1 mr-1.5 border rounded-sm text-sm cursor-pointer hover:text-[#9E7C59] ${
+                className={`border-black p-1 mr-1.5 mb-1.5 border rounded-sm text-sm cursor-pointer hover:text-[#9E7C59] ${
                   selectedSize === size ? "bg-[#D6CCC2]" : "bg-[#EDEDE9]"
                 }`}
               >

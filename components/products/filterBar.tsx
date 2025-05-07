@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { brands } from "@/constant";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -34,7 +34,7 @@ const FilterBar = () => {
   }
 
   return (
-    <div className=" text-[18px] pr-35">
+    <div className=" text-[18px] lg:pr-35 pr-20">
       <Button
         variant="custom"
         className="p-5 mb-4 md:w-60 rounded-3xl md:text-[18px]"
