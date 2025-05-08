@@ -1,26 +1,36 @@
 import Image from "next/image";
 // import { useCartStore } from "@/app/stores/useCartStore";
 // import { SaleProduct as Product } from "@/app/utils/fake-data";
-import { Product } from "@prisma/client";
+import { Product, User } from "@prisma/client";
 // import HeartButton from "../HeartButton";
-import { User } from "@prisma/client";
 import Link from "next/link";
 import { useState } from "react";
-import { PriceMap } from "@/app/utils/fake-data";
+import { PriceItem } from "@/app/types/product";
+// import { PriceMap } from "@/app/utils/fake-data";
 
 interface Props {
-  product: Product;
+  product: Product & { priceItems: PriceItem[] };
   currentUser?: User | null;
 }
 
 // export default function ProductCard({ product, currentUser }: Props) {
 export default function ProductCard({ product }: Props) {
-  const [selectedSize, setSelectedSize] = useState<string>(product.sizes[0]);
-  const priceBySize = product.priceBySize as PriceMap;
-  const salePriceBySize = product.salePriceBySize as PriceMap | undefined;
+  const [selectedSize, setSelectedSize] = useState<string>(
+    product.priceItems[0].size
+  );
 
-  const regularPrice = priceBySize[selectedSize];
-  const salePrice = salePriceBySize?.[selectedSize];
+  const selectedItem = product.priceItems.find(
+    (item) => item.size === selectedSize
+  );
+  const regularPrice = selectedItem?.price ?? 0;
+  const now = new Date();
+  const activeSale = selectedItem?.salePrices?.find((sp) => {
+    const start = new Date(sp.startsAt);
+    const end = sp.endsAt ? new Date(sp.endsAt) : undefined;
+    return start <= now && (!end || now <= end);
+  });
+
+  const salePrice = activeSale?.price;
   // const addToCart = useCartStore((state) => state.addToCart);
 
   return (
@@ -40,18 +50,18 @@ export default function ProductCard({ product }: Props) {
           </h2>
           <h2 className="text-lg line-clamp-1">{product.title}</h2>
           <div className="mt-2">
-            {product.sizes.map((size) => (
+            {product.priceItems.map((item) => (
               <button
-                key={size}
+                key={item.size}
                 onClick={(e) => {
                   e.preventDefault(); // to prevent Link navigation
-                  setSelectedSize(size);
+                  setSelectedSize(item.size);
                 }}
                 className={`border-black p-1 mr-1.5 mb-1.5 border rounded-sm text-sm cursor-pointer hover:text-[#9E7C59] ${
-                  selectedSize === size ? "bg-[#D6CCC2]" : "bg-[#EDEDE9]"
+                  selectedSize === item.size ? "bg-[#D6CCC2]" : "bg-[#EDEDE9]"
                 }`}
               >
-                {size}
+                {item.size}
               </button>
             ))}
           </div>

@@ -7,7 +7,15 @@ import { auth } from "@/auth";
 import { User } from "@/lib/validations/auth";
 
 export async function getProducts() {
-  const data = await prisma.product.findMany();
+  const data = await prisma.product.findMany({
+    include: {
+      priceItems: {
+        include: {
+          salePrices: true,
+        },
+      },
+    },
+  });
   return data;
 }
 

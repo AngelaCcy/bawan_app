@@ -8,17 +8,33 @@ datasource db {
 }
 
 model Product {
-  id                Int     @id @default(autoincrement())
-  brand             String
-  title             String
-  priceBySize       Json // stores { "250ml": 4235 }
-  salePriceBySize   Json? // null if not on sale
-  sizes             String[]
-  description       String 
-  rating            Int
-  stock             Int
-  category          String   
-  image             String[]
+  id          Int          @id @default(autoincrement())
+  brand       String
+  title       String
+  description String
+  rating      Int
+  stock       Int
+  category    String
+  image       String[]
+  priceItems  PriceItem[]
+}
+
+model PriceItem {
+  id         Int         @id @default(autoincrement())
+  size       String
+  price      Int
+  product    Product     @relation(fields: [productId], references: [id])
+  productId  Int
+  salePrices SalePrice[] // 👈 對應多個特價記錄
+}
+
+model SalePrice {
+  id          Int        @id @default(autoincrement())
+  price       Int
+  startsAt    DateTime   // 何時開始
+  endsAt      DateTime?  // 何時結束（可空）
+  priceItem   PriceItem  @relation(fields: [priceItemId], references: [id])
+  priceItemId Int
 }
 
 model User {

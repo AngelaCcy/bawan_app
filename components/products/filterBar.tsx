@@ -2,100 +2,100 @@
 import { Button } from "../ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { brands } from "@/constant";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Slider } from "@/components/ui/slider";
+import { useProductStore } from "@/app/stores/useProductStore";
+import { ProductWithPrice } from "@/app/types/product";
+import { useEffect, useState } from "react";
+import { getActivePrice } from "@/app/utils/pricing";
 
-const FormSchema = z.object({
-  items: z.array(z.string()),
-});
+// type PriceEntry = { size: string; price: number };
 
-const FilterBar = () => {
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
-  });
+type FilterBarProps = {
+  selected: string[];
+  onChange: (newSelected: string[]) => void;
+  onPriceChange: (range: number[]) => void;
+};
 
-  async function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log("Form submission started:", data);
-    // try {
-    //   await MagicSignin(values.email); // Ensure this function is awaited
-    //   console.log("Form submission completed.");
-    // } catch (error) {
-    //   console.error("Error during submission:", error);
-    // }
-  }
+export default function FilterBar({
+  selected,
+  onChange,
+  onPriceChange,
+}: FilterBarProps) {
+  const { allProducts } = useProductStore();
+  const [priceRange, setPriceRange] = useState({ min: 0, max: 0 });
+  const [selectedPriceRange, setSelectedPriceRange] = useState<number[]>([
+    0, 0,
+  ]);
+
+  useEffect(() => {
+    if (allProducts.length > 0) {
+      const prices: number[] = (allProducts as ProductWithPrice[]).map(
+        (product) => {
+          const first = product.priceItems[0];
+          if (!first) return 0;
+          return getActivePrice(first);
+        }
+      );
+      const min = Math.min(...prices);
+      const max = Math.max(...prices);
+      setPriceRange({ min, max });
+      setSelectedPriceRange([min, max]);
+      onPriceChange([min, max]);
+    }
+  }, [allProducts]);
+
+  const handleToggle = (brandId: string) => {
+    const updated = selected.includes(brandId)
+      ? selected.filter((id) => id !== brandId)
+      : [...selected, brandId];
+
+    onChange(updated);
+  };
 
   return (
     <div className=" text-[18px] lg:pr-35 pr-20">
       <Button
         variant="custom"
+        onClick={() => {
+          onChange([]);
+          setSelectedPriceRange([priceRange.min, priceRange.max]);
+          onPriceChange([priceRange.min, priceRange.max]);
+        }}
         className="p-5 mb-4 md:w-60 rounded-3xl md:text-[18px]"
       >
         清除全部篩選條件
       </Button>
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-8 border-black border-t-2 pt-2 pl-3"
-        >
-          <FormField
-            control={form.control}
-            name="items"
-            render={() => (
-              <FormItem>
-                <div className="mb-4">
-                  <FormLabel className="text-md">品牌</FormLabel>
-                </div>
-                {brands.map((brand) => (
-                  <FormField
-                    key={brand.id}
-                    control={form.control}
-                    name="items"
-                    render={({ field }) => {
-                      return (
-                        <FormItem
-                          key={brand.id}
-                          className="flex flex-row items-start space-x-3 space-y-0"
-                        >
-                          <FormControl>
-                            <Checkbox
-                              checked={field.value?.includes(brand.id)}
-                              className="border-black text-black data-[state=checked]:bg-black data-[state=checked]:border-black"
-                              onCheckedChange={(checked) => {
-                                return checked
-                                  ? field.onChange([...field.value, brand.id])
-                                  : field.onChange(
-                                      field.value?.filter(
-                                        (value) => value !== brand.id
-                                      )
-                                    );
-                              }}
-                            />
-                          </FormControl>
-                          <FormLabel className="text-sm font-normal">
-                            {brand.label}
-                          </FormLabel>
-                        </FormItem>
-                      );
-                    }}
-                  />
-                ))}
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          {/* <Button type="submit">Submit</Button> */}
-        </form>
-      </Form>
+      <div className="space-y-2 border-black border-t-2 pt-2 pl-3">
+        <p className="font-bold text-md mb-2">品牌</p>
+        {brands.map((brand) => (
+          <div key={brand.id} className="flex items-start space-x-2">
+            <Checkbox
+              checked={selected.includes(brand.id)}
+              onCheckedChange={() => handleToggle(brand.id)}
+              className="border-black text-black data-[state=checked]:bg-black"
+            />
+            <label className="text-sm">{brand.label}</label>
+          </div>
+        ))}
+      </div>
+      <div className="mt-3 space-y-2 border-black border-t-2 pt-2 pl-3">
+        <p className="font-bold text-md mb-2">定價</p>
+        <Slider
+          value={selectedPriceRange}
+          onValueChange={(newRange) => {
+            setSelectedPriceRange(newRange);
+            onPriceChange(newRange);
+          }}
+          min={priceRange.min}
+          max={priceRange.max}
+          step={100}
+          className="pr-1 pt-2"
+        />
+        <div className="flex justify-between text-sm text-muted-foreground">
+          <span>NT ${selectedPriceRange[0]}</span>
+          <span>NT ${selectedPriceRange[1]}</span>
+        </div>
+      </div>
     </div>
   );
-};
-export default FilterBar;
+}
