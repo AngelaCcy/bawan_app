@@ -11,15 +11,20 @@ export function getActivePrice(item: PriceItem): number {
   return activeSale?.price ?? item.price;
 }
 
+//只要這個商品有設定「開始販售日期」或「結束販售日期」，就代表它是期間限定。
 export function isLimitedTime(product: {
-  availableFrom?: string;
-  availableUntil?: string;
+  availableFrom?: Date | null;
+  availableUntil?: Date | null;
 }): boolean {
-  const now = new Date();
-  const from = product.availableFrom ? new Date(product.availableFrom) : null;
-  const until = product.availableUntil
-    ? new Date(product.availableUntil)
-    : null;
+  // const now = new Date();
+  // const from = product.availableFrom ? product.availableFrom : null;
+  // const until = product.availableUntil
+  //   ? new Date(product.availableUntil)
+  //   : null;
 
-  return (!from || from <= now) && (!until || now <= until);
+  // return (
+  //   (!product.availableFrom || product.availableFrom <= now) &&
+  //   (!product.availableUntil || now <= product.availableUntil)
+  // );
+  return Boolean(product.availableFrom || product.availableUntil);
 }
