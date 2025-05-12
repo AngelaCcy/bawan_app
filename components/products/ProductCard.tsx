@@ -37,7 +37,7 @@ export default function ProductCard({ product }: Props) {
     <div className="relative hover:-animate-bounce-y bg-[#ECE2D0] rounded-lg shadow-md overflow-hidden hover:shadow-xl flex flex-col justify-between p-4 relative cursor-pointer">
       <Link href={`/products/${product.id}`} passHref>
         {isLimitedTime(product) && (
-          <span className="absolute top-2 right-2 bg-[#9E7C59] text-white text-xs px-2 py-1 rounded-full shadow">
+          <span className="absolute top-2 right-2 bg-[#9E7C59] text-white text-sm px-4 py-2 rounded-full shadow outline-1 outline-black">
             期間限定
           </span>
         )}
