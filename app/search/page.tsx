@@ -2,7 +2,6 @@
 
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
-import { Product } from "@prisma/client";
 import ProductCard from "@/components/products/ProductCard";
 import { useProductStore } from "../stores/useProductStore";
 
@@ -18,7 +17,7 @@ export default function SearchPage() {
     }
   }, [fetchAllProducts, allProducts.length]);
 
-  const filtered = allProducts.filter((product: Product) =>
+  const filtered = allProducts.filter((product) =>
     product.title.toLowerCase().includes(keyword)
   );
 
@@ -29,7 +28,7 @@ export default function SearchPage() {
         <p className="text-muted-foreground">載入中...</p>
       ) : filtered.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {filtered.map((product: Product) => (
+          {filtered.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
