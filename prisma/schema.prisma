@@ -8,17 +8,36 @@ datasource db {
 }
 
 model Product {
-  id                Int     @id @default(autoincrement())
-  brand             String
-  title             String
-  priceBySize       Json // stores { "250ml": 4235 }
-  salePriceBySize   Json? // null if not on sale
-  sizes             String[]
-  description       String 
-  rating            Int
-  stock             Int
-  category          String   
-  image             String[]
+  id          Int          @id @default(autoincrement())
+  brand       String
+  title       String
+  description String
+  rating      Int
+  stock       Int
+  category    String
+  image       String[]
+  availableFrom   DateTime?
+  availableUntil  DateTime?
+  priceItems  PriceItem[] // A product can have miltiple sizes
+}
+
+// Each size with corresponding price
+model PriceItem {
+  id         Int         @id @default(autoincrement())
+  size       String
+  price      Int
+  product    Product     @relation(fields: [productId], references: [id])
+  productId  Int
+  salePrices SalePrice[] // Can have multiple salePrice during different time period
+}
+
+model SalePrice {
+  id          Int        @id @default(autoincrement())
+  price       Int
+  startsAt    DateTime   // Date of sales on
+  endsAt      DateTime?  // Date of sales end (optional)
+  priceItem   PriceItem  @relation(fields: [priceItemId], references: [id])
+  priceItemId Int
 }
 
 model User {

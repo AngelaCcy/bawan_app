@@ -1,31 +1,46 @@
 import Image from "next/image";
 // import { useCartStore } from "@/app/stores/useCartStore";
 // import { SaleProduct as Product } from "@/app/utils/fake-data";
-import { Product } from "@prisma/client";
+import { Product, User } from "@prisma/client";
 // import HeartButton from "../HeartButton";
-import { User } from "@prisma/client";
 import Link from "next/link";
 import { useState } from "react";
-import { PriceMap } from "@/app/utils/fake-data";
+import { PriceItem } from "@/app/types/product";
+import { isLimitedTime } from "@/app/utils/filtering";
 
 interface Props {
-  product: Product;
+  product: Product & { priceItems: PriceItem[] };
   currentUser?: User | null;
 }
 
 // export default function ProductCard({ product, currentUser }: Props) {
 export default function ProductCard({ product }: Props) {
-  const [selectedSize, setSelectedSize] = useState<string>(product.sizes[0]);
-  const priceBySize = product.priceBySize as PriceMap;
-  const salePriceBySize = product.salePriceBySize as PriceMap | undefined;
+  const [selectedSize, setSelectedSize] = useState<string>(
+    product.priceItems[0].size
+  );
 
-  const regularPrice = priceBySize[selectedSize];
-  const salePrice = salePriceBySize?.[selectedSize];
+  const selectedItem = product.priceItems.find(
+    (item) => item.size === selectedSize
+  );
+  const regularPrice = selectedItem?.price ?? 0;
+  const now = new Date();
+  const activeSale = selectedItem?.salePrices?.find((sp) => {
+    const start = new Date(sp.startsAt);
+    const end = sp.endsAt ? new Date(sp.endsAt) : undefined;
+    return start <= now && (!end || now <= end);
+  });
+
+  const salePrice = activeSale?.price;
   // const addToCart = useCartStore((state) => state.addToCart);
 
   return (
-    <div className="hover:-animate-bounce-y bg-[#ECE2D0] rounded-lg shadow-md overflow-hidden hover:shadow-xl flex flex-col justify-between p-4 relative cursor-pointer">
+    <div className="relative hover:-animate-bounce-y bg-[#ECE2D0] rounded-lg shadow-md overflow-hidden hover:shadow-xl flex flex-col justify-between p-4 relative cursor-pointer">
       <Link href={`/products/${product.id}`} passHref>
+        {isLimitedTime(product) && (
+          <span className="absolute top-2 right-2 bg-[#9E7C59] text-white text-xs px-2 py-1 rounded-full shadow">
+            期間限定
+          </span>
+        )}
         <Image
           src={product.image[0]}
           alt={product.title}
@@ -40,24 +55,28 @@ export default function ProductCard({ product }: Props) {
           </h2>
           <h2 className="text-lg line-clamp-1">{product.title}</h2>
           <div className="mt-2">
-            {product.sizes.map((size) => (
-              <button
-                key={size}
-                onClick={(e) => {
-                  e.preventDefault(); // to prevent Link navigation
-                  setSelectedSize(size);
-                }}
-                className={`border-black p-1 mr-1.5 mb-1.5 border rounded-sm text-sm cursor-pointer hover:text-[#9E7C59] ${
-                  selectedSize === size ? "bg-[#D6CCC2]" : "bg-[#EDEDE9]"
-                }`}
-              >
-                {size}
-              </button>
-            ))}
+            {product.priceItems.map((item) =>
+              item.size != "" ? (
+                <button
+                  key={item.size}
+                  onClick={(e) => {
+                    e.preventDefault(); // to prevent Link navigation
+                    setSelectedSize(item.size);
+                  }}
+                  className={`border-black p-1 mr-1.5 mb-1.5 border rounded-sm text-sm cursor-pointer hover:text-[#9E7C59] ${
+                    selectedSize === item.size ? "bg-[#D6CCC2]" : "bg-[#EDEDE9]"
+                  }`}
+                >
+                  {item.size}
+                </button>
+              ) : (
+                <div key={item.size} className="p-4 mr-1.5 mb-1.5"></div>
+              )
+            )}
           </div>
-          <div className="mt-4 flex items-center justify-between">
+          <div className=" flex items-center justify-between">
             {salePrice ? (
-              <div className="flex flex-col">
+              <div className=" mt-1 flex flex-col">
                 <span className="text-red-500 font-semibold">
                   NT ${salePrice}
                   {/* NT ${salePrice.toFixed(2)} */}
@@ -68,7 +87,7 @@ export default function ProductCard({ product }: Props) {
                 </span>
               </div>
             ) : (
-              <span className="text-gray-800 font-semibold">
+              <span className="mt-6 text-gray-800 font-semibold">
                 NT ${regularPrice}
                 {/* NT ${regularPrice.toFixed(2)} */}
               </span>

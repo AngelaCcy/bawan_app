@@ -1,9 +1,8 @@
 "use client";
 import ProductCard from "@/components/products/ProductCard";
 // import { FAKE_PRODUCT_DATA as products } from "@/app/utils/fake-data";
-import { getProducts } from "@/app/utils/actions";
 import { useEffect, useState } from "react";
-import { Product } from "@prisma/client";
+// import { Product } from "@prisma/client";
 import {
   Select,
   SelectContent,
@@ -12,50 +11,95 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 // import { Direction } from "@/app/utils/fake-data";
-import { PriceMap } from "@/app/utils/fake-data";
+import { useProductStore } from "@/app/stores/useProductStore";
+import { ProductWithPrice } from "@/app/types/product";
+import { getActivePrice } from "@/app/utils/filtering";
 
-const ProductLists = () => {
-  const [products, setProducts] = useState<Product[]>([]);
+type Props = {
+  selectedBrands: string[];
+  selectedPriceRange: number[];
+  selectedOther: string[];
+};
+
+export default function ProductLists({
+  selectedBrands,
+  selectedPriceRange,
+  selectedOther,
+}: Props) {
+  const { allProducts, fetchAllProducts, isLoading } = useProductStore();
+  const [filtered, setFiltered] = useState<ProductWithPrice[]>([]);
+  const [sortKey, setSortKey] = useState<string>("newest");
+
+  //Initial get all products
   useEffect(() => {
-    const getData = async () => {
-      const data = await getProducts();
-      if (data) {
-        setProducts(data);
-      }
-      // const currtUser = await getCurrentUser();
-      // if (currtUser) {
-      //   setCurrentUser(currtUser);
-      // }
+    if (allProducts.length === 0) {
+      fetchAllProducts();
+    }
+  }, [fetchAllProducts, allProducts.length]);
+
+  useEffect(() => {
+    // let result = [...allProducts];
+    let result = allProducts as ProductWithPrice[];
+
+    // filter by brand
+    if (selectedBrands.length > 0) {
+      result = result.filter((p) => selectedBrands.includes(p.brand));
+    }
+
+    // filter by price range using priceItems[0] (default size)
+    // const now = new Date();
+    result = result.filter((product) => {
+      const first = product.priceItems[0];
+      if (!first) return false;
+
+      const price = getActivePrice(first);
+      return price >= selectedPriceRange[0] && price <= selectedPriceRange[1];
+    });
+
+    // filter by 'sale' option
+    if (selectedOther.includes("sale")) {
+      result = result.filter((product) => {
+        const first = product.priceItems[0];
+        if (!first) return false;
+        return getActivePrice(first) < first.price;
+      });
+    }
+
+    // filter by 'limitedTime' option (example: sale endsAt must exist and be soon)
+    if (selectedOther.includes("limitedTime")) {
+      result = result.filter(
+        (product) => product.availableFrom || product.availableUntil
+      );
+    }
+
+    // sorting
+    const getPriceForSort = (product: ProductWithPrice): number => {
+      const first = product.priceItems[0];
+      if (!first) return Infinity;
+
+      return getActivePrice(first);
     };
-    getData();
-  }, []);
 
-  // const [direction, setDirection] = useState<Direction>("ASC");
-  const getMinPrice = (product: Product): number => {
-    const priceMap = product.priceBySize as PriceMap;
-    return Math.min(...Object.values(priceMap));
-  };
-  const handleSortingDirectionChange = (value: string) => {
-    // setDirection(value as Direction);
-
-    const sorted = [...products];
-
-    switch (value) {
+    switch (sortKey) {
       case "ASC":
-        sorted.sort((a, b) => getMinPrice(a) - getMinPrice(b));
+        result.sort((a, b) => getPriceForSort(a) - getPriceForSort(b));
         break;
       case "DES":
-        sorted.sort((a, b) => getMinPrice(b) - getMinPrice(a));
+        result.sort((a, b) => getPriceForSort(b) - getPriceForSort(a));
         break;
       case "newest":
-        sorted.sort((a, b) => b.id - a.id); // assuming higher ID = newer
+        result.sort((a, b) => b.id - a.id);
         break;
       case "oldest":
-        sorted.sort((a, b) => a.id - b.id);
+        result.sort((a, b) => a.id - b.id);
         break;
     }
 
-    setProducts(sorted);
+    setFiltered(result);
+  }, [selectedBrands, selectedPriceRange, sortKey, allProducts, selectedOther]);
+
+  const handleSortingDirectionChange = (value: string) => {
+    setSortKey(value);
   };
 
   return (
@@ -76,13 +120,21 @@ const ProductLists = () => {
           </SelectContent>
         </Select>
       </div>
-
-      <div className="my-15 mx-0 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {products?.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-      </div>
+      {isLoading ? (
+        <div className="flex justify-center mt-40 w-[945px] h-[495px]">
+          <p className="text-muted-foreground">載入中...</p>
+        </div>
+      ) : filtered.length > 0 ? (
+        <div className=" my-15  grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {filtered.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+      ) : (
+        <div className="w-[945px] h-[495px] flex justify-center items-center">
+          <p className="">沒有符合的產品</p>
+        </div>
+      )}
     </div>
   );
-};
-export default ProductLists;
+}
