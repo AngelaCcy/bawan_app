@@ -37,6 +37,8 @@ export interface SaleProduct {
   // quantity?: number;
 }
 
+export type PriceMap = Record<string, number>;
+
 export const FAKE_PRODUCT_DATA: Product[] = [
   {
     id: 1,
@@ -72,6 +74,21 @@ export const FAKE_PRODUCT_DATA: Product[] = [
   },
   {
     id: 3,
+    brand: "AVEDA",
+    title: "木質髮梳",
+    priceBySize: {
+      小款: 1100,
+      大款: 1400,
+    },
+    salePriceBySize: null,
+    sizes: ["小款", "大款"],
+    description:
+      "great outerwear jackets for Spring/Autumn/Winter, suitable for many occasions, such as working, hiking, camping, mountain/rock climbing, cycling, traveling or other outdoors. Good gift choice for you or your family member. A warm hearted love to Father, husband or son in this thanksgiving or Christmas Day.",
+    category: "men's clothing",
+    images: ["/img/aveda_hair_brush.jpg"],
+  },
+  {
+    id: 4,
     brand: "AVEDA",
     title: "木質髮梳",
     priceBySize: {

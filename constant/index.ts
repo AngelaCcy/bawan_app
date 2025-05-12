@@ -52,39 +52,54 @@ export const footerLinks = [
 
 export const brands = [
   {
-    id: "aveda",
+    id: "AVEDA",
     label: "AVEDA",
   },
   {
-    id: "diptyque",
+    id: "Diptyque",
     label: "Diptyque",
   },
   {
-    id: "lelabo",
+    id: "LE LABO",
     label: "LE LABO",
   },
   {
-    id: "lancome",
+    id: "Lancôme",
     label: "Lancôme",
   },
   {
-    id: "byredo",
+    id: "BYREDO",
     label: "BYREDO",
   },
   {
-    id: "ysl",
+    id: "YSL",
     label: "YSL",
   },
   {
-    id: "chanel",
+    id: "Chanel",
     label: "Chanel",
   },
   {
-    id: "bobbibrown",
+    id: "BOBBI BROWN",
     label: "BOBBI BROWN",
   },
   {
-    id: "mac",
+    id: "MAC",
     label: "MAC",
+  },
+  {
+    id: "SK-II",
+    label: "SK-II",
+  },
+];
+
+export const filterOther = [
+  {
+    id: "sale",
+    label: "特價",
+  },
+  {
+    id: "limitedTime",
+    label: "期間限定",
   },
 ];

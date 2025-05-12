@@ -8,25 +8,34 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { FileHeart, UserRound, Search, ShoppingBag } from "lucide-react";
-import { signOut, useSession } from "next-auth/react";
+import { FileHeart, UserRound, ShoppingBag } from "lucide-react";
+import { signOut } from "next-auth/react";
+import useCurrentUser from "@/hooks/useCurrentUser";
+import { useEffect } from "react";
+import { SearchOverlay } from "@/components/SearchOverlay";
 
 const UserNav = () => {
-  const { data: session } = useSession();
+  const { currentUser, fetchCurrtUser } = useCurrentUser();
+
+  useEffect(() => {
+    fetchCurrtUser();
+  }, [fetchCurrtUser]);
+
   const router = useRouter();
 
   const handleUserIconClick = () => {
-    if (!session) {
+    if (!currentUser) {
       router.push("/signin");
     }
   };
 
   return (
     <div className="flex justify-center">
-      <Link href="/search">
+      <SearchOverlay />
+      {/* <Link href="/search">
         <Search className="nav-icon" />
-      </Link>
-      {session ? (
+      </Link> */}
+      {currentUser ? (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button className="focus:outline-none">

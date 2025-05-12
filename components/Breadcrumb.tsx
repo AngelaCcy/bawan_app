@@ -13,7 +13,8 @@ import {
 
 export default function UserBreadcrumb() {
   const pathname = usePathname();
-  if (pathname === "/") return null;
+  if (pathname === "/" || pathname === "/signin" || pathname === "/signup")
+    return null;
   const segments = pathname.split("/").filter(Boolean); // remove empty strings
 
   const nameMap: Record<string, string> = {
@@ -23,7 +24,7 @@ export default function UserBreadcrumb() {
   };
 
   return (
-    <Breadcrumb className="mt-25 md:mt-18">
+    <Breadcrumb className="lg:mt-15 mt-25">
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink href="/">

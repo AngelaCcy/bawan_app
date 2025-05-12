@@ -4,10 +4,18 @@ import prisma from "@/lib/prisma";
 import { Product } from "./fake-data";
 import { SaleProduct } from "@/app/utils/fake-data";
 import { auth } from "@/auth";
-import type { User } from "@prisma/client";
+import { User } from "@/lib/validations/auth";
 
 export async function getProducts() {
-  const data = await prisma.product.findMany();
+  const data = await prisma.product.findMany({
+    include: {
+      priceItems: {
+        include: {
+          salePrices: true,
+        },
+      },
+    },
+  });
   return data;
 }
 
@@ -89,6 +97,32 @@ export async function getCurrentUser() {
     console.log(error);
     return null;
   }
+}
+
+export async function checkUserExist(email: string) {
+  const user = await prisma.user.findUnique({
+    where: {
+      email: email,
+    },
+  });
+  return user;
+}
+
+export async function createUser(userData: User) {
+  console.log(userData);
+  const createdUser = await prisma.user.create({
+    data: {
+      name: userData.name,
+      gender: userData.gender,
+      birth: userData.birth,
+      email: userData.email,
+      phone: userData.phone,
+      address: userData.address,
+      promotion: userData.promotion,
+      termAndCon: userData.termAndCon,
+    },
+  });
+  return createdUser;
 }
 
 export async function addFavorite(productId: string) {

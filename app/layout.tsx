@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { Inter, Noto_Sans_TC } from "next/font/google";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
-// import { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import ThemeProvider from "@/components/ThemeProvider";
 import AuthProvider from "@/components/providers/SessionProvider";
 import UserBreadcrumb from "@/components/Breadcrumb";
@@ -33,11 +33,10 @@ export default function RootLayout({
           <ThemeProvider>
             <Navbar />
             <main className="min-h-screen flex flex-col justify-center items-center">
-              {/* <Toaster position="bottom-center" /> */}
-              <div className="w-full pl-10">
+              <Toaster position="top-center" />
+              <div className="w-full p-10 lg:pl-20">
                 <UserBreadcrumb />
               </div>
-
               {children}
             </main>
             <Footer />

@@ -26,7 +26,7 @@ export function AuthButton({ provider }: { provider: string }) {
             alt={`${provider}Logo`}
             className="size-4 mr-2 sm:mr-4 flex-shrink-0"
           />
-          <span className="truncate">Sign in with {provider}</span>
+          <span className="truncate">使用 {provider} 帳號登入</span>
         </Button>
       )}
     </>
