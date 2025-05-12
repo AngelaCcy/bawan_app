@@ -16,23 +16,26 @@ model Product {
   stock       Int
   category    String
   image       String[]
-  priceItems  PriceItem[]
+  availableFrom   DateTime?
+  availableUntil  DateTime?
+  priceItems  PriceItem[] // A product can have miltiple sizes
 }
 
+// Each size with corresponding price
 model PriceItem {
   id         Int         @id @default(autoincrement())
   size       String
   price      Int
   product    Product     @relation(fields: [productId], references: [id])
   productId  Int
-  salePrices SalePrice[] // 👈 對應多個特價記錄
+  salePrices SalePrice[] // Can have multiple salePrice during different time period
 }
 
 model SalePrice {
   id          Int        @id @default(autoincrement())
   price       Int
-  startsAt    DateTime   // 何時開始
-  endsAt      DateTime?  // 何時結束（可空）
+  startsAt    DateTime   // Date of sales on
+  endsAt      DateTime?  // Date of sales end (optional)
   priceItem   PriceItem  @relation(fields: [priceItemId], references: [id])
   priceItemId Int
 }

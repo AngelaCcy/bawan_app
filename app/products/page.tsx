@@ -8,6 +8,7 @@ const Products = () => {
   const [selectedPriceRange, setSelectedPriceRange] = useState<number[]>([
     0, 0,
   ]);
+  const [selectedOther, setSelectedOther] = useState<string[]>([]);
 
   return (
     <div className="flex justify-center w-full px-10">
@@ -15,10 +16,13 @@ const Products = () => {
         selected={selectedBrands}
         onChange={setSelectedBrands}
         onPriceChange={setSelectedPriceRange}
+        onOtherChange={setSelectedOther}
+        selectedOther={selectedOther}
       />
       <ProductLists
         selectedBrands={selectedBrands}
         selectedPriceRange={selectedPriceRange}
+        selectedOther={selectedOther}
       />
     </div>
   );

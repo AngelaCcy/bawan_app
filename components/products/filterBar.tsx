@@ -1,12 +1,12 @@
 "use client";
 import { Button } from "../ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { brands } from "@/constant";
+import { brands, filterOther } from "@/constant";
 import { Slider } from "@/components/ui/slider";
 import { useProductStore } from "@/app/stores/useProductStore";
 import { ProductWithPrice } from "@/app/types/product";
 import { useEffect, useState } from "react";
-import { getActivePrice } from "@/app/utils/pricing";
+import { getActivePrice } from "@/app/utils/filtering";
 
 // type PriceEntry = { size: string; price: number };
 
@@ -14,12 +14,16 @@ type FilterBarProps = {
   selected: string[];
   onChange: (newSelected: string[]) => void;
   onPriceChange: (range: number[]) => void;
+  selectedOther: string[];
+  onOtherChange: (newSelected: string[]) => void;
 };
 
 export default function FilterBar({
   selected,
   onChange,
   onPriceChange,
+  selectedOther,
+  onOtherChange,
 }: FilterBarProps) {
   const { allProducts } = useProductStore();
   const [priceRange, setPriceRange] = useState({ min: 0, max: 0 });
@@ -44,22 +48,34 @@ export default function FilterBar({
     }
   }, [allProducts]);
 
-  const handleToggle = (brandId: string) => {
-    const updated = selected.includes(brandId)
-      ? selected.filter((id) => id !== brandId)
-      : [...selected, brandId];
+  const handleFilterToggle = (itemId: string) => {
+    //check if the selected checkbox is belongs to Other filter section
+    const isOther = filterOther.some((f) => f.id === itemId);
+    if (isOther) {
+      const isSelected = selectedOther.includes(itemId);
+      const updated = isSelected
+        ? selectedOther.filter((id) => id !== itemId)
+        : [...selectedOther, itemId];
+      onOtherChange(updated);
+    } else {
+      const isSelected = selected.includes(itemId);
+      const updated = isSelected
+        ? selected.filter((id) => id !== itemId)
+        : [...selected, itemId];
 
-    onChange(updated);
+      onChange(updated);
+    }
   };
 
   return (
-    <div className=" text-[18px] lg:pr-35 pr-20">
+    <div className=" text-[18px] lg:pr-40 pr-20 mb-30">
       <Button
         variant="custom"
         onClick={() => {
           onChange([]);
           setSelectedPriceRange([priceRange.min, priceRange.max]);
           onPriceChange([priceRange.min, priceRange.max]);
+          onOtherChange([]);
         }}
         className="p-5 mb-4 md:w-60 rounded-3xl md:text-[18px]"
       >
@@ -71,7 +87,7 @@ export default function FilterBar({
           <div key={brand.id} className="flex items-start space-x-2">
             <Checkbox
               checked={selected.includes(brand.id)}
-              onCheckedChange={() => handleToggle(brand.id)}
+              onCheckedChange={() => handleFilterToggle(brand.id)}
               className="border-black text-black data-[state=checked]:bg-black"
             />
             <label className="text-sm">{brand.label}</label>
@@ -95,6 +111,19 @@ export default function FilterBar({
           <span>NT ${selectedPriceRange[0]}</span>
           <span>NT ${selectedPriceRange[1]}</span>
         </div>
+      </div>
+      <div className="mt-3 space-y-2 border-black border-t-2 pt-2 pl-3">
+        <p className="font-bold text-md mb-2">其他</p>
+        {filterOther.map((item) => (
+          <div key={item.id} className="flex items-start space-x-2">
+            <Checkbox
+              checked={selectedOther.includes(item.id)}
+              onCheckedChange={() => handleFilterToggle(item.id)}
+              className="border-black text-black data-[state=checked]:bg-black"
+            />
+            <label className="text-sm">{item.label}</label>
+          </div>
+        ))}
       </div>
     </div>
   );

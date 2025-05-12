@@ -92,3 +92,14 @@ export const brands = [
     label: "SK-II",
   },
 ];
+
+export const filterOther = [
+  {
+    id: "sale",
+    label: "特價",
+  },
+  {
+    id: "limitedTime",
+    label: "期間限定",
+  },
+];

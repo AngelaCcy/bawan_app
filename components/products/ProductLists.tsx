@@ -13,16 +13,18 @@ import {
 // import { Direction } from "@/app/utils/fake-data";
 import { useProductStore } from "@/app/stores/useProductStore";
 import { ProductWithPrice } from "@/app/types/product";
-import { getActivePrice } from "@/app/utils/pricing";
+import { getActivePrice } from "@/app/utils/filtering";
 
 type Props = {
   selectedBrands: string[];
   selectedPriceRange: number[];
+  selectedOther: string[];
 };
 
 export default function ProductLists({
   selectedBrands,
   selectedPriceRange,
+  selectedOther,
 }: Props) {
   const { allProducts, fetchAllProducts, isLoading } = useProductStore();
   const [filtered, setFiltered] = useState<ProductWithPrice[]>([]);
@@ -54,6 +56,22 @@ export default function ProductLists({
       return price >= selectedPriceRange[0] && price <= selectedPriceRange[1];
     });
 
+    // filter by 'sale' option
+    if (selectedOther.includes("sale")) {
+      result = result.filter((product) => {
+        const first = product.priceItems[0];
+        if (!first) return false;
+        return getActivePrice(first) < first.price;
+      });
+    }
+
+    // filter by 'limitedTime' option (example: sale endsAt must exist and be soon)
+    if (selectedOther.includes("limitedTime")) {
+      result = result.filter(
+        (product) => product.availableFrom || product.availableUntil
+      );
+    }
+
     // sorting
     const getPriceForSort = (product: ProductWithPrice): number => {
       const first = product.priceItems[0];
@@ -78,7 +96,7 @@ export default function ProductLists({
     }
 
     setFiltered(result);
-  }, [selectedBrands, selectedPriceRange, sortKey, allProducts]);
+  }, [selectedBrands, selectedPriceRange, sortKey, allProducts, selectedOther]);
 
   const handleSortingDirectionChange = (value: string) => {
     setSortKey(value);
@@ -102,16 +120,19 @@ export default function ProductLists({
           </SelectContent>
         </Select>
       </div>
-
       {isLoading ? (
-        <div className="flex justify-center mt-40">
+        <div className="flex justify-center mt-40 w-[945px] h-[495px]">
           <p className="text-muted-foreground">載入中...</p>
         </div>
-      ) : (
-        <div className="my-15 mx-0 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      ) : filtered.length > 0 ? (
+        <div className=" my-15  grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {filtered.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
+        </div>
+      ) : (
+        <div className="w-[945px] h-[495px] flex justify-center items-center">
+          <p className="">沒有符合的產品</p>
         </div>
       )}
     </div>
