@@ -4,26 +4,6 @@ import { create } from "zustand";
 import { getProducts } from "@/app/utils/actions";
 import { ProductWithPrice } from "../types/product";
 
-// interface SalePrice {
-//   id: number;
-//   price: number;
-//   startsAt: Date;
-//   endsAt?: Date | null;
-//   priceItemId: number;
-// }
-
-// interface PriceItem {
-//   id: number;
-//   size: string;
-//   price: number;
-//   productId: number;
-//   salePrices: SalePrice[];
-// }
-
-// type ProductWithPrice = Product & {
-//   priceItems: PriceItem[];
-// };
-
 type Store = {
   allProducts: ProductWithPrice[];
   setAllProducts: (p: ProductWithPrice[]) => void;

@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 // import { useCartStore } from "@/app/stores/useCartStore";
 // import { SaleProduct as Product } from "@/app/utils/fake-data";
