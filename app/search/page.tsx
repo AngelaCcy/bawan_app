@@ -6,11 +6,11 @@ import ProductCard from "@/components/products/ProductCard";
 import { getProducts } from "@/app/utils/actions";
 import type { ProductWithPrice } from "@/app/types/product";
 
-interface Props {
+export default async function SearchPage({
+  searchParams,
+}: {
   searchParams: { q?: string };
-}
-
-export default async function SearchPage({ searchParams }: Props) {
+}) {
   // const searchParams = useSearchParams();
   // const keyword = searchParams.get("q")?.toLowerCase() || "";
   const keyword = searchParams.q?.toLowerCase() || "";
