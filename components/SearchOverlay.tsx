@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { Product } from "@prisma/client";
+import { ProductWithPrice } from "@/app/types/product";
 import ProductCard from "@/components/products/ProductCard";
 import { useProductStore } from "@/app/stores/useProductStore";
 
@@ -18,7 +18,7 @@ export function SearchOverlay() {
   const router = useRouter();
   const { allProducts, fetchAllProducts, isLoading } = useProductStore();
   const [input, setInput] = useState("");
-  const [filtered, setFiltered] = useState<Product[]>([]);
+  const [filtered, setFiltered] = useState<ProductWithPrice[]>([]);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {

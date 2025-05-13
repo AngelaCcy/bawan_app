@@ -1,27 +1,8 @@
 // stores/useProductStore.ts
 import { create } from "zustand";
-import { Product } from "@prisma/client";
+// import { Product } from "@prisma/client";
 import { getProducts } from "@/app/utils/actions";
-
-interface SalePrice {
-  id: number;
-  price: number;
-  startsAt: Date;
-  endsAt?: Date | null;
-  priceItemId: number;
-}
-
-interface PriceItem {
-  id: number;
-  size: string;
-  price: number;
-  productId: number;
-  salePrices: SalePrice[];
-}
-
-type ProductWithPrice = Product & {
-  priceItems: PriceItem[];
-};
+import { ProductWithPrice } from "../types/product";
 
 type Store = {
   allProducts: ProductWithPrice[];

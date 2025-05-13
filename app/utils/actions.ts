@@ -1,8 +1,8 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { Product } from "./fake-data";
-import { SaleProduct } from "@/app/utils/fake-data";
+// import { Product } from "./fake-data";
+// import { SaleProduct } from "@/app/utils/fake-data";
 import { auth } from "@/auth";
 import { User } from "@/lib/validations/auth";
 
@@ -28,19 +28,19 @@ export async function getProductById(id: number) {
   return product;
 }
 
-export async function updateProductById(id: number, data: Product) {
-  const updatedProduct = await prisma.product.update({
-    where: { id: id },
-    data: {
-      title: data.title,
-      description: data.description,
-      price: data.price,
-      category: data.category,
-      image: data.image,
-    },
-  });
-  return updatedProduct;
-}
+// export async function updateProductById(id: number, data: Product) {
+//   const updatedProduct = await prisma.product.update({
+//     where: { id: id },
+//     data: {
+//       title: data.title,
+//       description: data.description,
+//       price: data.price,
+//       category: data.category,
+//       image: data.image,
+//     },
+//   });
+//   return updatedProduct;
+// }
 
 export async function deleteProductById(id: number) {
   const deletedProduct = await prisma.product.delete({
@@ -49,24 +49,24 @@ export async function deleteProductById(id: number) {
   return deletedProduct;
 }
 
-export async function createProduct({
-  title,
-  price,
-  description,
-  category,
-  image,
-}: Product) {
-  const createdProduct = await prisma.product.create({
-    data: {
-      title: title,
-      description: description,
-      price: price,
-      category: category,
-      image: image,
-    },
-  });
-  return createdProduct;
-}
+// export async function createProduct({
+//   title,
+//   price,
+//   description,
+//   category,
+//   image,
+// }: Product) {
+//   const createdProduct = await prisma.product.create({
+//     data: {
+//       title: title,
+//       description: description,
+//       price: price,
+//       category: category,
+//       image: image,
+//     },
+//   });
+//   return createdProduct;
+// }
 
 // export async function getFavoriteIds(userId: string | undefined) {
 //   if (!userId) return;
@@ -176,28 +176,28 @@ export async function deleteFavorite(productId: string) {
   }
 }
 
-export async function getUserFavorites(
-  currentUser: User | null | undefined,
-  products: SaleProduct[]
-) {
-  try {
-    // const currentUser = await getCurrentUser();
+// export async function getUserFavorites(
+//   currentUser: User | null | undefined,
+//   products: SaleProduct[]
+// ) {
+//   try {
+//     // const currentUser = await getCurrentUser();
 
-    if (!currentUser) return [];
-    // const favorites = await prisma.listing.findMany({
-    //   where: {
-    //     id: {
-    //       in: [...(currentUser.favoriteIds || [])]
-    //     }
-    //   }
-    // })
-    const favorites = products.filter((product) => {
-      return currentUser.favoriteIds.includes(String(product.id));
-    });
+//     if (!currentUser) return [];
+//     // const favorites = await prisma.listing.findMany({
+//     //   where: {
+//     //     id: {
+//     //       in: [...(currentUser.favoriteIds || [])]
+//     //     }
+//     //   }
+//     // })
+//     const favorites = products.filter((product) => {
+//       return currentUser.favoriteIds.includes(String(product.id));
+//     });
 
-    return favorites;
-  } catch (error: unknown) {
-    console.log(error);
-    return [];
-  }
-}
+//     return favorites;
+//   } catch (error: unknown) {
+//     console.log(error);
+//     return [];
+//   }
+// }
