@@ -125,13 +125,13 @@ export default function ProductLists({
           <p className="text-muted-foreground">載入中...</p>
         </div>
       ) : filtered.length > 0 ? (
-        <div className=" my-15  grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className=" my-15 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {filtered.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
       ) : (
-        <div className="w-[945px] h-[495px] flex justify-center items-center">
+        <div className="lg:w-[945px] h-[495px] md:w-[500px] sm:w-[200px] flex justify-center items-cente mt-40">
           <p className="">沒有符合的產品</p>
         </div>
       )}

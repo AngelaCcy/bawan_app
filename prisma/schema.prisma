@@ -43,12 +43,12 @@ model SalePrice {
 model User {
   id            String          @id @default(cuid())
   name          String?
-  gender        String
-  birth         DateTime
+  gender        String?
+  birth         DateTime?
   email         String          @unique
   emailVerified DateTime?
-  phone         String
-  address       String
+  phone         String?
+  address       String?
   promotion     Boolean @default(false)
   termAndCon    Boolean @default(false)
   image         String?

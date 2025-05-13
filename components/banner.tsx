@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { FAKE_BANNER_MESSAGES } from "@/app/utils/fake-data";
+import { BANNER_MESSAGES } from "@/app/utils/fake-data";
 
 const Banner = () => {
   const [index, setIndex] = useState(0);
@@ -12,7 +12,7 @@ const Banner = () => {
       // Update the index after a short delay to allow the animation to start
       setTimeout(() => {
         setIndex((prev) =>
-          prev === FAKE_BANNER_MESSAGES.length - 1 ? 0 : prev + 1
+          prev === BANNER_MESSAGES.length - 1 ? 0 : prev + 1
         );
         setIsAnimating(true);
       }, 10);
@@ -28,7 +28,7 @@ const Banner = () => {
         key={index}
         className={`text-center $ ${isAnimating ? "animate-slideUpFade" : ""}`}
       >
-        {FAKE_BANNER_MESSAGES[index]}
+        {BANNER_MESSAGES[index]}
       </div>
     </div>
   );

@@ -106,7 +106,7 @@ export const FAKE_PRODUCT_DATA: Product[] = [
 
 export type Direction = "ASC" | "DES";
 
-export const FAKE_BANNER_MESSAGES: string[] = [
+export const BANNER_MESSAGES: string[] = [
   "情人節活動開跑！全館滿$2000享9折",
   "BYREDO限量禮盒88折",
   "加入會員並賞受更多折扣吧！",
