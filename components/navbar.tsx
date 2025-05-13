@@ -5,7 +5,8 @@ import MainNav from "./main-nav";
 import UserNav from "./user-nav";
 import Image from "next/image";
 import logo from "@/public/img/bawan_word.png";
-import Banner from "./banner";
+// import Banner from "./banner";
+import NavBarCarousel from "./nav-carousel";
 // import LoginSignupNav from "./signinSignup-nav";
 // import { auth } from "@/auth";
 // import CartNav from "./cart-nav";
@@ -19,7 +20,8 @@ const Navbar = () => {
 
   return (
     <header className="w-full fixed z-10 top-0 bg-navbar dark:bg-gray-900 border-b border-gray-200">
-      <Banner />
+      {/* <Banner /> */}
+      <NavBarCarousel />
       <nav className="h-16 px-4 flex justify-between items-center">
         <Link href="/" className="hidden lg:block">
           <Image src={logo} alt="menu" width={180} height={100} />

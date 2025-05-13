@@ -103,3 +103,21 @@ export const filterOther = [
     label: "期間限定",
   },
 ];
+
+export const BANNER_MESSAGES = [
+  {
+    message: "情人節活動開跑！全館滿$2000享9折",
+    url: "/",
+    color: "text-red-600",
+  },
+  {
+    message: "BYREDO限量禮盒88折",
+    url: "/",
+    color: "",
+  },
+  {
+    message: "加入會員並賞受更多折扣吧！",
+    url: "/",
+    color: "",
+  },
+];
