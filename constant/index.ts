@@ -91,6 +91,10 @@ export const brands = [
     id: "SK-II",
     label: "SK-II",
   },
+  {
+    id: "Aesop",
+    label: "Aesop",
+  },
 ];
 
 export const filterOther = [

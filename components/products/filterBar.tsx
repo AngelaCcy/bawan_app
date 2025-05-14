@@ -68,7 +68,7 @@ export default function FilterBar({
   };
 
   return (
-    <div className=" text-[18px] lg:pr-40 pr-20 mb-30">
+    <div className=" text-[18px] lg:pr-20 pr-20 mb-30">
       <Button
         variant="custom"
         onClick={() => {
