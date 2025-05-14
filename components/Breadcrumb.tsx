@@ -42,7 +42,7 @@ export default function UserBreadcrumb() {
           return (
             <div key={href} className="flex items-center">
               <BreadcrumbSeparator />
-              <BreadcrumbItem className="text-[18px]">
+              <BreadcrumbItem className="text-[17px]">
                 {isLast ? (
                   <BreadcrumbPage className="ml-3 border-b-2 border-black">
                     {label}

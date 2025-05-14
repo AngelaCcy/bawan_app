@@ -43,11 +43,11 @@ export default function ProductCard({ product }: Props) {
           </span>
         )}
         <Image
-          src={product.image[0]}
+          src={`/img/${product.brand}/${product.image[0]}`}
           alt={product.title}
           width={400}
           height={400}
-          className="object-cover w-full h-[180px] "
+          className="object-cover w-full h-[280px] "
           priority
         />
         <div className="flex-1 flex flex-col justify-between">
