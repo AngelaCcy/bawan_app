@@ -30,7 +30,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
       from: process.env.EMAIL_FROM,
     }),
-    Line({ allowDangerousEmailAccountLinking: true }),
+    Line({
+      authorization: {
+        params: {
+          scope: "openid profile", // ⬅️ remove 'email'
+        },
+      },
+      allowDangerousEmailAccountLinking: true,
+    }),
   ],
   adapter: PrismaAdapter(prisma),
   // callbacks: {
