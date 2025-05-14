@@ -7,15 +7,16 @@ import Nodemailer from "next-auth/providers/nodemailer";
 import prisma from "./lib/prisma";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  debug: true,
   providers: [
     Google({
       allowDangerousEmailAccountLinking: true,
-      authorization: {
-        params: {
-          // request name, avatar, locale, etc.
-          scope: "openid email profile",
-        },
-      },
+      // authorization: {
+      //   params: {
+      //     // request name, avatar, locale, etc.
+      //     scope: "openid email profile",
+      //   },
+      // },
     }),
     GitHub({ allowDangerousEmailAccountLinking: true }),
     Nodemailer({
