@@ -6,6 +6,7 @@ import GoogleLogo from "@/public/img/google.svg";
 import LineLogo from "@/public/img/line.svg";
 import Image from "next/image";
 import { Loader2 } from "lucide-react";
+import { signIn } from "next-auth/react";
 
 export function AuthButton({ provider }: { provider: string }) {
   const { pending } = useFormStatus();
@@ -16,13 +17,26 @@ export function AuthButton({ provider }: { provider: string }) {
           <Loader2 className="size-4 mr-2 animate-spin" />
           Please wait...
         </Button>
+      ) : provider === "Line" ? (
+        <Button
+          variant="outline"
+          className="w-full text-xs sm:text-sm flex items-center"
+          onClick={() => signIn("line", { callbackUrl: "/" })}
+        >
+          <Image
+            src={LineLogo}
+            alt={`${provider}Logo`}
+            className="size-4 mr-2 sm:mr-4 flex-shrink-0"
+          />
+          <span className="truncate">使用 {provider} 帳號登入</span>
+        </Button>
       ) : (
         <Button
           variant="outline"
           className="w-full text-xs sm:text-sm flex items-center"
         >
           <Image
-            src={provider === "Google" ? GoogleLogo : LineLogo}
+            src={GoogleLogo}
             alt={`${provider}Logo`}
             className="size-4 mr-2 sm:mr-4 flex-shrink-0"
           />
@@ -31,4 +45,26 @@ export function AuthButton({ provider }: { provider: string }) {
       )}
     </>
   );
+  // return (
+  //   <>
+  //     {pending ? (
+  //       <Button disabled variant="outline" className="w-full">
+  //         <Loader2 className="size-4 mr-2 animate-spin" />
+  //         Please wait...
+  //       </Button>
+  //     ) : (
+  //       <Button
+  //         variant="outline"
+  //         className="w-full text-xs sm:text-sm flex items-center"
+  //       >
+  //         <Image
+  //           src={provider === "Google" ? GoogleLogo : LineLogo}
+  //           alt={`${provider}Logo`}
+  //           className="size-4 mr-2 sm:mr-4 flex-shrink-0"
+  //         />
+  //         <span className="truncate">使用 {provider} 帳號登入</span>
+  //       </Button>
+  //     )}
+  //   </>
+  // );
 }
