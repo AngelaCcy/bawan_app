@@ -1,66 +1,124 @@
-// import { create } from "zustand";
-// import { persist } from "zustand/middleware";
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
+import { toast } from "react-hot-toast";
+import { CartItem } from "../types/product";
 
-// import { SaleProduct as Product } from "@/app/utils/fake-data";
+interface State {
+  cart: CartItem[];
+  totalItems: number;
+  totalPrice: number;
+}
 
-// interface State {
-//   cart: Product[];
-//   totalItems: number;
-//   totalPrice: number;
-// }
+interface Actions {
+  addToCart: (item: CartItem) => void;
+  removeFromCart: (productId: number, size: string) => void;
+  clearCart: () => void;
+  updateQuantity: (productId: number, size: string, newQty: number) => void;
+}
 
-// interface Actions {
-//   addToCart: (Item: Product) => void;
-//   removeFromCart: (Item: Product) => void;
-// }
+const INITIAL_STATE: State = {
+  cart: [],
+  totalItems: 0,
+  totalPrice: 0,
+};
 
-// const INITIAL_STATE: State = {
-//   cart: [],
-//   totalItems: 0,
-//   totalPrice: 0,
-// };
+export const useCartStore = create(
+  persist<State & Actions>(
+    (set, get) => ({
+      ...INITIAL_STATE,
 
-// export const useCartStore = create(
-//   persist<State & Actions>(
-//     (set, get) => ({
-//       cart: INITIAL_STATE.cart,
-//       totalItems: INITIAL_STATE.totalItems,
-//       totalPrice: INITIAL_STATE.totalPrice,
-//       addToCart: (product: Product) => {
-//         const cart = get().cart;
-//         const cartItem = cart.find((item) => item.id === product.id);
+      addToCart: (newItem) => {
+        const { cart, totalItems, totalPrice } = get();
+        const existingItem = cart.find(
+          (item) =>
+            item.productId === newItem.productId && item.size === newItem.size
+        );
 
-//         if (cartItem) {
-//           const updatedCart = cart.map((item) =>
-//             item.id === product.id
-//               ? { ...item, quantity: (item.quantity as number) + 1 }
-//               : item
-//           );
-//           set((state) => ({
-//             cart: updatedCart,
-//             totalItems: state.totalItems + 1,
-//             totalPrice: state.totalPrice + product.price,
-//           }));
-//         } else {
-//           const updatedCart = [...cart, { ...product, quantity: 1 }];
+        if (existingItem) {
+          const availableStock = existingItem.stock;
+          const newQty = Math.min(
+            existingItem.quantity + newItem.quantity,
+            availableStock
+          );
+          const actualAdded = newQty - existingItem.quantity;
 
-//           set((state) => ({
-//             cart: updatedCart,
-//             totalItems: state.totalItems + 1,
-//             totalPrice: state.totalPrice + product.price,
-//           }));
-//         }
-//       },
-//       removeFromCart: (product: Product) => {
-//         set((state) => ({
-//           cart: state.cart.filter((item) => item.id !== product.id),
-//           totalItems: state.totalItems - 1,
-//           totalPrice: state.totalPrice - product.price,
-//         }));
-//       },
-//     }),
-//     {
-//       name: "cart-storage",
-//     }
-//   )
-// );
+          if (actualAdded === 0) {
+            toast.error("已達庫存上限，無法再加入");
+            return;
+          }
+
+          const updatedCart = cart.map((item) =>
+            item.productId === newItem.productId
+              ? { ...item, quantity: newQty }
+              : item
+          );
+
+          set({
+            cart: updatedCart,
+            totalItems: totalItems + actualAdded,
+            totalPrice: totalPrice + newItem.price * actualAdded,
+          });
+        } else {
+          const actualQty = Math.min(newItem.quantity, newItem.stock);
+          const newCartItem = { ...newItem, quantity: actualQty };
+
+          set({
+            cart: [...cart, newCartItem],
+            totalItems: totalItems + actualQty,
+            totalPrice: totalPrice + newItem.price * actualQty,
+          });
+        }
+        toast.success("已成功加入購物車！");
+      },
+
+      removeFromCart: (productId, size) => {
+        const { cart } = get();
+        const itemToRemove = cart.find(
+          (item) => item.productId === productId && item.size === size
+        );
+        if (!itemToRemove) return;
+
+        set((state) => ({
+          cart: state.cart.filter(
+            (item) => !(item.productId === productId && item.size === size)
+          ),
+          totalItems: state.totalItems - itemToRemove.quantity,
+          totalPrice:
+            state.totalPrice - itemToRemove.price * itemToRemove.quantity,
+        }));
+      },
+
+      updateQuantity: (productId, size, newQty) =>
+        set((state) => {
+          const updatedCart = state.cart.map((item) => {
+            if (item.productId === productId && item.size === size) {
+              return { ...item, quantity: newQty };
+            }
+            return item;
+          });
+
+          const totalItems = updatedCart.reduce(
+            (acc, item) => acc + item.quantity,
+            0
+          );
+          const totalPrice = updatedCart.reduce(
+            (acc, item) => acc + item.price * item.quantity,
+            0
+          );
+
+          return { cart: updatedCart, totalItems, totalPrice };
+        }),
+
+      clearCart: () => {
+        set({
+          cart: [],
+          totalItems: 0,
+          totalPrice: 0,
+        });
+      },
+    }),
+    {
+      name: "cart-storage",
+    }
+  )
+);

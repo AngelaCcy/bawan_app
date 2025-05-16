@@ -10,12 +10,34 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { useEffect, useState } from "react";
+import { getProductById } from "@/app/utils/actions";
 
 export default function UserBreadcrumb() {
   const pathname = usePathname();
+  const [productName, setProductName] = useState<string | undefined>("");
+
+  const segments = pathname.split("/").filter(Boolean); // remove empty strings
+  // Detect if we're at /products/[id]
+  const isProductDetailPage =
+    segments.length === 2 && segments[0] === "products";
+
+  useEffect(() => {
+    async function fetchProductName() {
+      if (isProductDetailPage) {
+        try {
+          const product = await getProductById(Number(segments[1]));
+          setProductName(product?.title);
+        } catch (err) {
+          console.error("Failed to fetch product name:", err);
+        }
+      }
+    }
+    fetchProductName();
+  }, [isProductDetailPage, segments]);
+
   if (pathname === "/" || pathname === "/signin" || pathname === "/signup")
     return null;
-  const segments = pathname.split("/").filter(Boolean); // remove empty strings
 
   const nameMap: Record<string, string> = {
     products: "全部商品",
@@ -35,16 +57,21 @@ export default function UserBreadcrumb() {
         {segments.map((segment, index) => {
           const href = "/" + segments.slice(0, index + 1).join("/");
           const isLast = index === segments.length - 1;
-          const label =
+
+          let label =
             nameMap[segment] ||
             segment.charAt(0).toUpperCase() + segment.slice(1);
+
+          if (isProductDetailPage && index === 1 && productName) {
+            label = productName;
+          }
 
           return (
             <div key={href} className="flex items-center">
               <BreadcrumbSeparator />
-              <BreadcrumbItem className="text-[17px]">
+              <BreadcrumbItem className="text-[17px] ml-3">
                 {isLast ? (
-                  <BreadcrumbPage className="ml-3 border-b-2 border-black">
+                  <BreadcrumbPage className="border-b-2 border-black">
                     {label}
                   </BreadcrumbPage>
                 ) : (
