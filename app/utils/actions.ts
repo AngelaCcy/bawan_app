@@ -24,6 +24,13 @@ export async function getProductById(id: number) {
     where: {
       id: id,
     },
+    include: {
+      priceItems: {
+        include: {
+          salePrices: true,
+        },
+      },
+    },
   });
   return product;
 }
