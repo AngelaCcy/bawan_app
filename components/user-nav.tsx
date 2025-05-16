@@ -8,11 +8,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { FileHeart, UserRound, ShoppingBag } from "lucide-react";
+import { FileHeart, UserRound } from "lucide-react";
 import { signOut } from "next-auth/react";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import { useEffect } from "react";
 import { SearchOverlay } from "@/components/SearchOverlay";
+import CartDrawer from "./cart/CartDrawer";
 
 const UserNav = () => {
   const { currentUser, fetchCurrtUser } = useCurrentUser();
@@ -72,9 +73,10 @@ const UserNav = () => {
       <Link href="/favorites">
         <FileHeart className="nav-icon" />
       </Link>
-      <Link href="/cart">
+      <CartDrawer />
+      {/* <Link href="/cart">
         <ShoppingBag className="nav-icon" />
-      </Link>
+      </Link> */}
     </div>
   );
 };
