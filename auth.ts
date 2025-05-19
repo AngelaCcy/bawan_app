@@ -1,5 +1,5 @@
 import Google from "next-auth/providers/google";
-import GitHub from "next-auth/providers/github";
+// import GitHub from "next-auth/providers/github";
 import Line from "next-auth/providers/line";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import NextAuth from "next-auth";
@@ -18,7 +18,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       //   },
       // },
     }),
-    GitHub({ allowDangerousEmailAccountLinking: true }),
+    // GitHub({ allowDangerousEmailAccountLinking: true }),
     Nodemailer({
       server: {
         host: process.env.EMAIL_SERVER_HOST,
@@ -33,10 +33,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     Line({
       authorization: {
         params: {
-          scope: "openid profile", // ⬅️ remove 'email'
+          scope: "openid profile email",
         },
       },
       allowDangerousEmailAccountLinking: true,
+      checks: ["state"],
     }),
   ],
   adapter: PrismaAdapter(prisma),
