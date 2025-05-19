@@ -6,6 +6,12 @@ import PriceDisplay from "./PriceDisplay";
 import SizeSelector from "./SizeSelector";
 import { useEffect, useState } from "react";
 import AddToCartPanel from "./AddToCartPanel";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 interface Props {
   product: ProductWithPrice;
@@ -84,6 +90,35 @@ export default function ProductInfoPanel({ product }: Props) {
           </p>
         ) : null}
       </div>
+
+      {/* 注意事項 */}
+      <div className=" bg-[#D5BDAF] shadow-md max-w-xl">
+        <div className="flex justify-center flex-col items-center border-2 border-black px-1 py-4 m-4">
+          <p className="pb-1 font-bold">注意⚠️下單前先詢問❗️</p>
+          <p>📦 全館滿 NT$599 本島免運</p>
+          <p>🚚 現貨商品：1～3 天內寄出</p>
+          <p>🕐 預購商品：約 14～21 天到貨</p>
+        </div>
+      </div>
+
+      {/* Product Ingredients and HOW TO */}
+      <Accordion type="single" collapsible className="w-full ">
+        <AccordionItem value="item-1">
+          <AccordionTrigger className="text-lg">主要成分</AccordionTrigger>
+          <AccordionContent>
+            化妝水界的皇后來了 真正的神仙水始祖 這是一款「多功能水狀精華液」
+            一瓶含有90%的PITERA
+            <br /> ✅有效補水保濕 ✅改善乾燥暗沈 ✅細緻平滑肌膚
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem value="item-2">
+          <AccordionTrigger className="text-lg">用法 & 用途</AccordionTrigger>
+          <AccordionContent>
+            倒出約50元硬幣用量於手掌心步驟2：再將掌心中的青春露勻潤於雙掌，輕輕擦勻全臉，然後倒出其他用量重複此步驟步驟3：輕拍於全臉，直到完全吸收
+            可在化妝水後使用，拍一拍吸收一也可用來濕敷，強化肌膚和保濕💦保濕、透亮、穩定膚況出了名的有感
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
     </div>
   );
 }

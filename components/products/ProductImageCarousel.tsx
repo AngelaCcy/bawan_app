@@ -22,34 +22,35 @@ export default function ProductImageCarousel({ images, brand }: Props) {
 
   return (
     <div className="w-full">
+      {/* Main Image Swiper */}
       <Swiper
         spaceBetween={10}
-        navigation
-        thumbs={{ swiper: thumbsSwiper }}
+        navigation={images.length > 1}
+        thumbs={images.length > 1 ? { swiper: thumbsSwiper } : undefined}
         modules={[FreeMode, Navigation, Thumbs]}
-        className="w-full mb-4"
-        loop={true}
+        className="w-full mb-2"
+        loop={images.length > 1}
       >
         {images.map((fileName, idx) => (
           <SwiperSlide key={idx}>
             <Image
               src={`/img/${brand}/${fileName}`}
               alt={`Product image ${idx + 1}`}
-              width={600}
-              height={600}
-              className="w-full h-[580px] object-cover"
+              width={400}
+              height={400}
+              className="w-full h-[680px] object-cover"
             />
           </SwiperSlide>
         ))}
       </Swiper>
 
       {/* Thumbnails */}
-      <div className="flex justify-center justify-items-center items-center pl-7">
+      <div className="flex justify-center items-center pl-7 gap-2 mt-2">
         <Swiper
           onSwiper={setThumbsSwiper}
-          loop={true}
-          spaceBetween={5}
-          slidesPerView={3}
+          loop={false}
+          spaceBetween={2}
+          slidesPerView={Math.min(images.length, 4)}
           watchSlidesProgress
           modules={[FreeMode, Navigation, Thumbs]}
           className="w-max"
@@ -59,9 +60,9 @@ export default function ProductImageCarousel({ images, brand }: Props) {
               <Image
                 src={`/img/${brand}/${fileName}`}
                 alt={`Thumbnail ${idx + 1}`}
-                width={100}
+                width={80}
                 height={100}
-                className="object-cover h-[120px]"
+                className="object-cover w-[80px] h-[100px]"
               />
             </SwiperSlide>
           ))}

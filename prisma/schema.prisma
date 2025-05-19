@@ -12,13 +12,13 @@ model Product {
   brand       String
   title       String
   description String
-  rating      Int
   totalStock  Int         @default(0)
   category    String
   image       String[]
   availableFrom   DateTime?
   availableUntil  DateTime?
   priceItems  PriceItem[] // A product can have miltiple sizes
+  reviews     Review[]
 }
 
 // Each size with corresponding price
@@ -41,6 +41,18 @@ model SalePrice {
   priceItemId Int
 }
 
+model Review {
+  id          Int        @id @default(autoincrement())
+  rating      Int        // 1 to 5
+  title       String
+  content     String
+  createdAt   DateTime  @default(now())
+  product     Product   @relation(fields: [productId], references: [id])
+  productId   Int
+  user        User      @relation(fields: [userId], references: [id])
+  userId      String
+}
+
 model User {
   id            String          @id @default(cuid())
   name          String?
@@ -58,6 +70,7 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   favoriteIds   String[]
+  reviews       Review[]
 }
  
 model Account {
