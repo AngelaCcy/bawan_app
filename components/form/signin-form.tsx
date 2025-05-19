@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { AuthButton } from "./SubmitButtons";
-import { GoogleSignin, MagicSignin } from "@/app/utils/authActions";
+import { GoogleSignin, MagicSignin, LineSignin } from "@/app/utils/authActions";
 import { Loader2 } from "lucide-react";
 import { checkUserExist } from "@/app/utils/actions";
 import { useRouter } from "next/navigation";
@@ -115,10 +115,9 @@ const SignInForm = () => {
       <form action={GoogleSignin} className="w-full pb-3">
         <AuthButton provider="Google" />
       </form>
-      <AuthButton provider="Line" />
-      {/* <form action={LineSignin} className="w-full">
+      <form action={LineSignin} className="w-full">
         <AuthButton provider="Line" />
-      </form> */}
+      </form>
       <p className="text-center text-sm text-gray-600 mt-2">
         還不是會員嗎？&nbsp;
         <Link className="text-blue-600 hover:underline" href="/signup">
