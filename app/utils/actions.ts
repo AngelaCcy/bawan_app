@@ -35,6 +35,18 @@ export async function getProductById(id: number) {
   return product;
 }
 
+export async function getReviewById(id: number) {
+  const product = await prisma.review.findMany({
+    where: {
+      productId: id,
+    },
+    include: {
+      user: true,
+    },
+  });
+  return product;
+}
+
 // export async function updateProductById(id: number, data: Product) {
 //   const updatedProduct = await prisma.product.update({
 //     where: { id: id },

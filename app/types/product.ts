@@ -31,3 +31,14 @@ export interface CartItem {
   image: string;
   stock: number;
 }
+
+export type Review = {
+  id: number;
+  rating: number;
+  title: string;
+  content: string;
+  createdAt: Date;
+  user: {
+    name: string | null;
+  };
+};
