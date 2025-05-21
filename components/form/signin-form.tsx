@@ -93,7 +93,7 @@ const SignInForm = () => {
             type="submit"
             disabled={isSubmitting}
           >
-            <Loader2 className="size-4 mr-2 animate-spin" /> Submitting...
+            <Loader2 className="size-4 mr-2 animate-spin" /> 上傳中...
           </Button>
         ) : (
           <Button

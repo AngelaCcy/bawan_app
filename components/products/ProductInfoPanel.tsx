@@ -6,12 +6,15 @@ import PriceDisplay from "./PriceDisplay";
 import SizeSelector from "./SizeSelector";
 import { useEffect, useState } from "react";
 import AddToCartPanel from "./AddToCartPanel";
+import HeartButton from "../HeartButton";
+import { useProductReview } from "@/hooks/useProductReview";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import ReactStars from "react-stars";
 
 interface Props {
   product: ProductWithPrice;
@@ -19,6 +22,7 @@ interface Props {
 
 export default function ProductInfoPanel({ product }: Props) {
   console.log("Product Info Panel received:", product);
+  const { avgRating, reviewCount } = useProductReview(product.id);
 
   const [selectedSize, setSelectedSize] = useState<string>("");
 
@@ -43,8 +47,24 @@ export default function ProductInfoPanel({ product }: Props) {
 
   return (
     <div className="flex flex-col justify-start space-y-4">
-      <h1 className="text-4xl font-semibold">{product.brand}</h1>
-      <h2 className="text-2xl">{product.title}</h2>
+      <div className="flex justify-between pr-3">
+        <h1 className="text-4xl font-semibold">{product.brand}</h1>
+        <div>
+          <ReactStars
+            count={5}
+            value={avgRating}
+            edit={false}
+            size={20}
+            color1={"#ccc"}
+            color2={"black"}
+          />
+          <span className="text-sm">{reviewCount} 個評論</span>
+        </div>
+      </div>
+      <div className="flex justify-between mr-8">
+        <h2 className="text-2xl">{product.title}</h2>
+        <HeartButton productId={String(product.id)} />
+      </div>
       <span className="text-gray-500 text-[18px]">#再創新低價 #專櫃正品</span>
 
       <SizeSelector
@@ -106,16 +126,13 @@ export default function ProductInfoPanel({ product }: Props) {
         <AccordionItem value="item-1">
           <AccordionTrigger className="text-lg">主要成分</AccordionTrigger>
           <AccordionContent>
-            化妝水界的皇后來了 真正的神仙水始祖 這是一款「多功能水狀精華液」
-            一瓶含有90%的PITERA
-            <br /> ✅有效補水保濕 ✅改善乾燥暗沈 ✅細緻平滑肌膚
+            {product.ingredients ? product.ingredients : "沒有資料"}
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value="item-2">
           <AccordionTrigger className="text-lg">用法 & 用途</AccordionTrigger>
           <AccordionContent>
-            倒出約50元硬幣用量於手掌心步驟2：再將掌心中的青春露勻潤於雙掌，輕輕擦勻全臉，然後倒出其他用量重複此步驟步驟3：輕拍於全臉，直到完全吸收
-            可在化妝水後使用，拍一拍吸收一也可用來濕敷，強化肌膚和保濕💦保濕、透亮、穩定膚況出了名的有感
+            {product.usage ? product.usage : "沒有資料"}
           </AccordionContent>
         </AccordionItem>
       </Accordion>

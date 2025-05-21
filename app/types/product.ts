@@ -40,5 +40,6 @@ export type Review = {
   createdAt: Date;
   user: {
     name: string | null;
+    image: string | null;
   };
 };

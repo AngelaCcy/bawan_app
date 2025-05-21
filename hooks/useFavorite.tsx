@@ -1,20 +1,23 @@
 // import { useRouter } from "next/navigation";
 import { useCallback, useMemo, MouseEvent } from "react";
 import { toast } from "react-hot-toast";
-import { User } from "@prisma/client";
+// import { User } from "@prisma/client";
 // import useLoginModal from "./useLoginModal";
 import { addFavorite, deleteFavorite } from "@/app/utils/actions";
+import useCurrentUser from "@/hooks/useCurrentUser";
+import { useRouter } from "next/navigation";
 // import { useRouter } from "next/navigation";
 // import { sessionUser } from "@/app/utils/fake-data";
 // import { log } from "console";
 
 interface IFavorite {
-  currentUser?: User | null;
+  // currentUser?: User | null;
   productId: string;
 }
 
-const useFavorite = ({ currentUser, productId }: IFavorite) => {
-  // const router = useRouter();
+const useFavorite = ({ productId }: IFavorite) => {
+  const { currentUser } = useCurrentUser();
+  const router = useRouter();
   // const loginModal = useLoginModal();
 
   const hasFavorite = useMemo(() => {
@@ -27,7 +30,11 @@ const useFavorite = ({ currentUser, productId }: IFavorite) => {
 
       if (!currentUser) {
         // loginModal.onOpen();
+        toast("請先都入喔!", {
+          icon: "❗️",
+        });
         console.log("ERROR! User not found.");
+        router.push("/signin");
         return;
       }
 
@@ -44,15 +51,15 @@ const useFavorite = ({ currentUser, productId }: IFavorite) => {
         // router.reload();
 
         toast.promise(request(), {
-          loading: "loading...",
-          success: "Successfully update!",
-          error: "Error occurs in data!",
+          loading: "請稍候...",
+          success: "已更新你的心願清單!",
+          error: "發生錯誤!",
         });
         return true;
         // window.location.reload();
       } catch (error) {
         console.log(error);
-        toast.error("Something went wrong");
+        toast.error("發生錯誤了！");
         return false;
       }
     },
