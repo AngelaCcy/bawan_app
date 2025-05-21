@@ -35,18 +35,6 @@ export async function getProductById(id: number) {
   return product;
 }
 
-export async function getReviewById(id: number) {
-  const product = await prisma.review.findMany({
-    where: {
-      productId: id,
-    },
-    include: {
-      user: true,
-    },
-  });
-  return product;
-}
-
 // export async function updateProductById(id: number, data: Product) {
 //   const updatedProduct = await prisma.product.update({
 //     where: { id: id },
@@ -220,3 +208,41 @@ export async function deleteFavorite(productId: string) {
 //     return [];
 //   }
 // }
+
+export async function getReviewById(id: number) {
+  const product = await prisma.review.findMany({
+    where: {
+      productId: id,
+    },
+    include: {
+      user: true,
+    },
+  });
+  return product;
+}
+
+export async function createReview({
+  productId,
+  title,
+  content,
+  rating,
+  userId,
+}: {
+  productId: number;
+  title: string;
+  content: string;
+  rating: number;
+  userId: string;
+}) {
+  const review = await prisma.review.create({
+    data: {
+      productId,
+      title,
+      content,
+      rating,
+      userId,
+    },
+  });
+
+  return review;
+}
