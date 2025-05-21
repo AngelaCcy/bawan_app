@@ -16,7 +16,7 @@ export function AuthButton({ provider }: { provider: string }) {
       {pending ? (
         <Button disabled variant="outline" className="w-full">
           <Loader2 className="size-4 mr-2 animate-spin" />
-          Please wait...
+          請稍等...
         </Button>
       ) : (
         <Button

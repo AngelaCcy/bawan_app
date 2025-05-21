@@ -4,24 +4,20 @@
 import useFavorite from "@/hooks/useFavorite";
 
 import { Heart } from "lucide-react";
-import { User } from "@prisma/client";
+// import { User } from "@prisma/client";
 import { useState } from "react";
 import { useEffect } from "react";
 // import { sessionUser } from "../utils/fake-data";
 
 interface HeartButtonProps {
   productId: string;
-  currentUser?: User | null;
+  // currentUser?: User | null;
 }
 
-const HeartButton: React.FC<HeartButtonProps> = ({
-  productId,
-  currentUser,
-}) => {
+const HeartButton: React.FC<HeartButtonProps> = ({ productId }) => {
   const [hasFav, setHasFav] = useState(false);
   const { hasFavorite, toggleFavorite } = useFavorite({
     productId,
-    currentUser,
   });
   useEffect(() => {
     if (hasFavorite) {
@@ -44,12 +40,18 @@ const HeartButton: React.FC<HeartButtonProps> = ({
       // onClick={toggleFavorite}
       onClick={handleFavoriteToggle}
       className="
-        absolute
-        right-5
         hover:scale-125
         transition
         cursor-pointer
       "
+      // className="
+      //   absolute
+      //   right-15
+      //   lg:right-36
+      //   hover:scale-125
+      //   transition
+      //   cursor-pointer
+      // "
     >
       {/* {hasFavorite ? ( */}
       {hasFav ? (

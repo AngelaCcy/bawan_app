@@ -40,3 +40,11 @@ export const userSignUpValidation = z.object({
 // });
 
 export type User = z.infer<typeof userSignUpValidation>;
+
+export const reviewValidation = z.object({
+  title: z.string().min(1, "標題不能為空"),
+  content: z.string().min(1, "內容不能為空"),
+  rating: z.number().min(1, "請至少給一顆星"),
+});
+
+export type ReviewFormData = z.infer<typeof reviewValidation>;
