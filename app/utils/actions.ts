@@ -5,8 +5,9 @@ import prisma from "@/lib/prisma";
 // import { SaleProduct } from "@/app/utils/fake-data";
 import { auth } from "@/auth";
 import { User } from "@/lib/validations/auth";
+import { Prisma } from "@prisma/client";
 
-export async function getProducts() {
+export async function getAllProducts() {
   const data = await prisma.product.findMany({
     include: {
       priceItems: {
@@ -17,6 +18,21 @@ export async function getProducts() {
     },
   });
   return data;
+}
+
+export async function getProducts(page: number, pageSize: number) {
+  const products = await prisma.product.findMany({
+    skip: (page - 1) * pageSize, // determine the starting point of the current page
+    take: pageSize, // how many items to fetch from db in one request
+    include: {
+      priceItems: {
+        include: {
+          salePrices: true,
+        },
+      },
+    },
+  });
+  return products;
 }
 
 export async function getProductById(id: number) {
@@ -54,6 +70,37 @@ export async function deleteProductById(id: number) {
     where: { id: id },
   });
   return deletedProduct;
+}
+
+export async function searchProductsWithCount(
+  keyword: string,
+  page: number,
+  pageSize: number
+) {
+  const where: Prisma.ProductWhereInput = {
+    OR: [
+      { title: { contains: keyword, mode: "insensitive" } },
+      { brand: { contains: keyword, mode: "insensitive" } },
+    ],
+  };
+  const [products, totalCount] = await Promise.all([
+    prisma.product.findMany({
+      where,
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+      orderBy: { id: "desc" },
+      include: {
+        priceItems: {
+          include: {
+            salePrices: true,
+          },
+        },
+      },
+    }),
+    prisma.product.count({ where }),
+  ]);
+
+  return { products, totalCount };
 }
 
 // export async function createProduct({
