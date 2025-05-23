@@ -24,5 +24,7 @@ export function useSearchProducts(input: string) {
     return text.includes(keyword);
   });
 
-  return { filtered, loading };
+  const total = filtered.length;
+
+  return { filtered, loading, total };
 }

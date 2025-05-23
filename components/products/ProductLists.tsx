@@ -1,7 +1,7 @@
 "use client";
 import ProductCard from "@/components/products/ProductCard";
 // import { FAKE_PRODUCT_DATA as products } from "@/app/utils/fake-data";
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState } from "react";
 // import { Product } from "@prisma/client";
 import {
   Select,
@@ -26,70 +26,16 @@ export default function ProductLists({
   selectedPriceRange,
   selectedOther,
 }: Props) {
-  const getResponsivePageSize = () => {
-    // const width = window.innerWidth;
-    // if (width <= 768) return 8;
-    // if (width <= 1024) return 12;
-    // return 16;
-    return 8;
-  };
-
-  // Creates a observer instance to watch the "load more" trigger.
-  const observerRef = useRef<IntersectionObserver | null>(null);
-  // Create a React ref to point to a DOM element at the bottom ofp roduct list.
-  const loadMoreRef = useRef<HTMLDivElement | null>(null);
-  const [pageSize, setPageSize] = useState(16);
-  const {
-    allProducts,
-    fetchProductsPaginated,
-    isLoading,
-    hasMore,
-    resetProducts,
-  } = useProductStore();
+  const { allProducts, fetchAllProducts, isLoading } = useProductStore();
   const [filtered, setFiltered] = useState<ProductWithPrice[]>([]);
   const [sortKey, setSortKey] = useState<string>("newest");
 
-  //Fetch first page
+  //Initial get all products
   useEffect(() => {
-    resetProducts();
-    const size = getResponsivePageSize();
-    setPageSize(size);
-    fetchProductsPaginated(size);
-    // if (allProducts.length === 0) {
-    //   fetchAllProducts();
-    // }
-  }, []);
-
-  const isFetchingRef = useRef(false);
-
-  // This function runs when target element (loadMoreRef.current) enters the viewpoint
-  const handleObserver = useCallback(
-    (entries: IntersectionObserverEntry[]) => {
-      const target = entries[0]; // the observed element
-      console.log("👀 Observing:", target.isIntersecting);
-      // Load the next page of products if the bottom of the page is visible
-      if (target.isIntersecting && !isFetchingRef.current && hasMore) {
-        isFetchingRef.current = true;
-        fetchProductsPaginated(pageSize).finally(() => {
-          // give it a small delay to avoid back-to-back triggers
-          setTimeout(() => {
-            isFetchingRef.current = false;
-          }, 300);
-        });
-      }
-      // if (target.isIntersecting && !isLoading && hasMore) {
-      //   fetchProductsPaginated(pageSize);
-      // }
-    },
-    [isLoading, hasMore, pageSize]
-  );
-
-  useEffect(() => {
-    if (observerRef.current) observerRef.current.disconnect(); // Cleans up any old observer instance
-    observerRef.current = new IntersectionObserver(handleObserver); //Create new observers
-
-    if (loadMoreRef.current) observerRef.current.observe(loadMoreRef.current); //Attaches the observer to the bottom div
-  }, [handleObserver]);
+    if (allProducts.length === 0) {
+      fetchAllProducts();
+    }
+  }, [fetchAllProducts, allProducts.length]);
 
   useEffect(() => {
     // let result = [...allProducts];
@@ -180,23 +126,14 @@ export default function ProductLists({
         </div>
       ) : filtered.length > 0 ? (
         <div className=" my-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {allProducts.map((product) => (
+          {filtered.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
-          {/* {filtered.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))} */}
         </div>
       ) : (
         <div className="lg:w-[945px] h-[495px] md:w-[500px] sm:w-[200px] flex justify-center items-cente mt-40">
           <p className="">沒有符合的產品</p>
         </div>
-      )}
-      <div ref={loadMoreRef} className="h-10 w-full mt-20" />
-      {isLoading && (
-        <p className="text-center text-sm mt-4 text-muted-foreground">
-          載入更多中...
-        </p>
       )}
     </div>
   );

@@ -72,14 +72,28 @@ export function SearchOverlay() {
             <p className="text-sm text-muted-foreground">載入中...</p>
           ) : filtered.length > 0 ? (
             filtered.map((product) => (
-              <ProductCard
+              <div
                 key={product.id}
-                product={product}
-                variant="search"
-                onClick={() => setOpen(false)}
-              />
+                data-aos="fade-up"
+                data-aos-anchor-placement="top-bottom"
+              >
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  variant="search"
+                  onClick={() => setOpen(false)}
+                />
+              </div>
             ))
           ) : (
+            // filtered.map((product) => (
+            //   <ProductCard
+            //     key={product.id}
+            //     product={product}
+            //     variant="search"
+            //     onClick={() => setOpen(false)}
+            //   />
+            // ))
             <p className="text-sm text-muted-foreground">找不到相關商品</p>
           )}
         </div>
