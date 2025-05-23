@@ -23,9 +23,9 @@ export function useInfiniteSearchProducts(keyword: string, pageSize = 8) {
 
       setLoading(true);
       const { products: result, totalCount } = await searchProductsWithCount(
-        keyword,
-        page,
-        pageSize
+        keyword
+        // page,
+        // pageSize
       );
       setProducts((prev) => {
         const combined = [...prev, ...result];

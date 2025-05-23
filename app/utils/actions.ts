@@ -16,24 +16,24 @@ export async function getAllProducts() {
         },
       },
     },
+    orderBy: { id: "desc" },
   });
   return data;
 }
-
-export async function getProducts(page: number, pageSize: number) {
-  const products = await prisma.product.findMany({
-    skip: (page - 1) * pageSize, // determine the starting point of the current page
-    take: pageSize, // how many items to fetch from db in one request
-    include: {
-      priceItems: {
-        include: {
-          salePrices: true,
-        },
-      },
-    },
-  });
-  return products;
-}
+// export async function getProducts(page: number, pageSize: number) {
+//   const products = await prisma.product.findMany({
+//     skip: (page - 1) * pageSize, // determine the starting point of the current page
+//     take: pageSize, // how many items to fetch from db in one request
+//     include: {
+//       priceItems: {
+//         include: {
+//           salePrices: true,
+//         },
+//       },
+//     },
+//   });
+//   return products;
+// }
 
 export async function getProductById(id: number) {
   const product = await prisma.product.findUnique({
@@ -73,9 +73,9 @@ export async function deleteProductById(id: number) {
 }
 
 export async function searchProductsWithCount(
-  keyword: string,
-  page: number,
-  pageSize: number
+  keyword: string
+  // page: number,
+  // pageSize: number
 ) {
   const where: Prisma.ProductWhereInput = {
     OR: [
@@ -86,8 +86,8 @@ export async function searchProductsWithCount(
   const [products, totalCount] = await Promise.all([
     prisma.product.findMany({
       where,
-      skip: (page - 1) * pageSize,
-      take: pageSize,
+      // skip: (page - 1) * pageSize,
+      // take: pageSize,
       orderBy: { id: "desc" },
       include: {
         priceItems: {

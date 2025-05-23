@@ -40,7 +40,7 @@ export default function UserBreadcrumb() {
     pathname === "/" ||
     pathname === "/signin" ||
     pathname === "/signup" ||
-    "/search"
+    pathname.startsWith("/search")
   )
     return null;
 
@@ -52,7 +52,7 @@ export default function UserBreadcrumb() {
   };
 
   return (
-    <Breadcrumb className="lg:mt-15 mt-25">
+    <Breadcrumb className=" pb-3 mt-28">
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink href="/">

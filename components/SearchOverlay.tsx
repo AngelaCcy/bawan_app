@@ -63,7 +63,7 @@ export function SearchOverlay() {
           onKeyDown={handleKeyDown}
         />
         {/* <div className="mt-4 max-h-[500px] p-3 overflow-y-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"> */}
-        <div className="mt-4 max-h-[500px] overflow-y-auto grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="mt-4 max-h-[500px] overflow-y-auto grid grid-cols-2 gap-4">
           {input.trim() === "" ? (
             <p className="text-sm text-muted-foreground">
               請輸入關鍵字進行搜尋
@@ -72,14 +72,28 @@ export function SearchOverlay() {
             <p className="text-sm text-muted-foreground">載入中...</p>
           ) : filtered.length > 0 ? (
             filtered.map((product) => (
-              <ProductCard
+              <div
                 key={product.id}
-                product={product}
-                variant="search"
-                onClick={() => setOpen(false)}
-              />
+                data-aos="fade-up"
+                data-aos-anchor-placement="top-bottom"
+              >
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  variant="search"
+                  onClick={() => setOpen(false)}
+                />
+              </div>
             ))
           ) : (
+            // filtered.map((product) => (
+            //   <ProductCard
+            //     key={product.id}
+            //     product={product}
+            //     variant="search"
+            //     onClick={() => setOpen(false)}
+            //   />
+            // ))
             <p className="text-sm text-muted-foreground">找不到相關商品</p>
           )}
         </div>
