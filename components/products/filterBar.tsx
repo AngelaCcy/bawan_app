@@ -3,7 +3,7 @@ import { Button } from "../ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { brands, filterOther } from "@/constant";
 import { Slider } from "@/components/ui/slider";
-import { useProductStore } from "@/app/stores/useProductStore";
+import { useProductStore } from "@/hooks/useProductStore";
 import { ProductWithPrice } from "@/app/types/product";
 import { useEffect, useState } from "react";
 import { getActivePrice } from "@/app/utils/filtering";

@@ -36,13 +36,19 @@ export default function UserBreadcrumb() {
     fetchProductName();
   }, [isProductDetailPage, segments]);
 
-  if (pathname === "/" || pathname === "/signin" || pathname === "/signup")
+  if (
+    pathname === "/" ||
+    pathname === "/signin" ||
+    pathname === "/signup" ||
+    "/search"
+  )
     return null;
 
   const nameMap: Record<string, string> = {
     products: "全部商品",
     skincare: "保養品",
     essence: "精華液",
+    favorites: "心願清單",
   };
 
   return (
