@@ -58,7 +58,7 @@ export default function ProductCard({
       className={`${containerBase} ${
         isSearch
           ? "flex flex-col p-3 h-[350px]"
-          : "flex flex-col justify-between p-4 hover:-animate-bounce-y"
+          : "flex flex-col justify-between p-4 h-[480px] hover:-animate-bounce-y"
       }`}
     >
       <div
@@ -95,7 +95,7 @@ export default function ProductCard({
       {/* Info Section */}
       {/* <div className="flex-1 flex flex-col justify-between"> */}
       {/* <div className={`p-3 ${isSearch ? "flex-1 flex flex-col" : ""}`}> */}
-      <div className="p-3">
+      <div className={`p-3 ${activeSale ? "pt-0 pb-0" : ""}`}>
         <h2 className="text-lg font-semibold line-clamp-1 my-1.5">
           {product.brand}
         </h2>

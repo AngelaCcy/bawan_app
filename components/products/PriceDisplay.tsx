@@ -9,7 +9,7 @@ export default function PriceDisplay({ regularPrice, salePrice }: Props) {
       {salePrice ? (
         <div className="flex flex-col">
           <span className="text-red-500 font-semibold">NT ${salePrice}</span>
-          <span className="text-gray-800 font-semibold text-[18px] line-through">
+          <span className="text-gray-800 font-semibold text-[16px] line-through">
             NT ${regularPrice}
           </span>
         </div>

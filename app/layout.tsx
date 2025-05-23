@@ -7,9 +7,9 @@ import { Toaster } from "react-hot-toast";
 import ThemeProvider from "@/components/ThemeProvider";
 import AuthProvider from "@/components/providers/SessionProvider";
 import UserBreadcrumb from "@/components/Breadcrumb";
-// import "@/app/globals.css";
-// import "aos/dist/aos.css";
-// import AOSInitializer from "@/components/AOSInitializer";
+import "@/app/globals.css";
+import "aos/dist/aos.css";
+import AOSInitializer from "@/components/AOSInitializer";
 
 const inter = Inter({ subsets: ["latin"] });
 const notoSansTC = Noto_Sans_TC({
@@ -41,7 +41,7 @@ export default function RootLayout({
             <div className="w-full px-5 lg:px-15 lg:pl-20 mt-4">
               <UserBreadcrumb />
             </div>
-            {/* <AOSInitializer /> */}
+            <AOSInitializer />
             <div className="w-full px-5 lg:px-15 lg:pl-20 mt-4">{children}</div>
             {/* </main> */}
             <Footer />

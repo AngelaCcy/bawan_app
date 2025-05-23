@@ -14,6 +14,7 @@ import {
 import { useProductStore } from "@/hooks/useProductStore";
 import { ProductWithPrice } from "@/app/types/product";
 import { getActivePrice } from "@/app/utils/filtering";
+import AOS from "aos";
 
 type Props = {
   selectedBrands: string[];
@@ -29,6 +30,11 @@ export default function ProductLists({
   const { allProducts, fetchAllProducts, isLoading } = useProductStore();
   const [filtered, setFiltered] = useState<ProductWithPrice[]>([]);
   const [sortKey, setSortKey] = useState<string>("newest");
+
+  // whenever your visible list changes, tell AOS to recalculate
+  useEffect(() => {
+    AOS.refresh();
+  }, [filtered]);
 
   //Initial get all products
   useEffect(() => {
@@ -126,9 +132,19 @@ export default function ProductLists({
         </div>
       ) : filtered.length > 0 ? (
         <div className=" my-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {filtered.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
+          {filtered.map((product, idx) => {
+            const delay = (idx % 4) * 100;
+            return (
+              <div
+                key={product.id}
+                data-aos="fade-up"
+                data-aos-delay={delay}
+                data-aos-duration="500"
+              >
+                <ProductCard key={product.id} product={product} />
+              </div>
+            );
+          })}
         </div>
       ) : (
         <div className="lg:w-[945px] h-[495px] md:w-[500px] sm:w-[200px] flex justify-center items-cente mt-40">

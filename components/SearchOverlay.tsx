@@ -63,7 +63,7 @@ export function SearchOverlay() {
           onKeyDown={handleKeyDown}
         />
         {/* <div className="mt-4 max-h-[500px] p-3 overflow-y-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"> */}
-        <div className="mt-4 max-h-[500px] overflow-y-auto grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="mt-4 max-h-[500px] overflow-y-auto grid grid-cols-2 gap-4">
           {input.trim() === "" ? (
             <p className="text-sm text-muted-foreground">
               請輸入關鍵字進行搜尋

@@ -9,7 +9,7 @@ export default function AOSInitializer() {
       once: true,
       duration: 700,
       easing: "ease-out-cubic",
-      offset: 100,
+      offset: window.innerHeight * 0.5,
     });
   }, []);
 
