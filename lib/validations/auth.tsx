@@ -48,3 +48,15 @@ export const reviewValidation = z.object({
 });
 
 export type ReviewFormData = z.infer<typeof reviewValidation>;
+
+export const ProfileValidation = z.object({
+  name: z.string().min(1, "姓名是必填欄位").max(50, "姓名需少於50個字"),
+  gender: z.enum(["女生", "男生"]),
+  birth: z.coerce.date({ invalid_type_error: "生日是必填欄位" }),
+  email: z.string().min(1, "信箱是必填欄位").email("信箱格式錯誤或無效"),
+  phone: z
+    .string()
+    .min(1, "電話是必填欄位")
+    .regex(/^\d{10}$/, "電話格式不符合"),
+  image: z.string().nullable(),
+});

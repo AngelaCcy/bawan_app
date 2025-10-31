@@ -43,3 +43,12 @@ export type Review = {
     image: string | null;
   };
 };
+
+export type ProfileForm = {
+  name: string;
+  gender: string;
+  birth: Date;
+  email: string;
+  phone: string | null;
+  image: string | null;
+};
