@@ -5,6 +5,7 @@ import prisma from "@/lib/prisma";
 // import { SaleProduct } from "@/app/utils/fake-data";
 import { auth } from "@/auth";
 import { User } from "@/lib/validations/auth";
+import { ProfileForm } from "../types/product";
 import { Prisma } from "@prisma/client";
 
 export async function getAllProducts() {
@@ -177,6 +178,21 @@ export async function createUser(userData: User) {
     },
   });
   return createdUser;
+}
+
+export async function updateUserProfileById(id: string, data: ProfileForm) {
+  const updatedProduct = await prisma.user.update({
+    where: { id: id },
+    data: {
+      name: data.name,
+      gender: data.gender,
+      birth: data.birth,
+      email: data.email,
+      phone: data.phone,
+      image: data.image,
+    },
+  });
+  return updatedProduct;
 }
 
 export async function addFavorite(productId: string) {
