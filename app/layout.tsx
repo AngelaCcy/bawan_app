@@ -36,14 +36,17 @@ export default function RootLayout({
           <ThemeProvider>
             <Navbar />
             {/* <main className="min-h-screen flex flex-col justify-center items-center"> */}
-            <Toaster position="top-center" />
-            {/* <div className="w-full p-5 lg:p-15 lg:pl-20"> */}
-            <div className="w-full px-5 lg:px-15 lg:pl-20 mt-4">
-              <UserBreadcrumb />
-            </div>
-            <AOSInitializer />
-            <div className="w-full px-5 lg:px-15 lg:pl-20 mt-4">{children}</div>
-            {/* </main> */}
+            <main className="min-h-screen">
+              <Toaster position="top-center" />
+              {/* <div className="w-full p-5 lg:p-15 lg:pl-20"> */}
+              <div className="w-full px-5 lg:px-15 lg:pl-20 mt-4">
+                <UserBreadcrumb />
+              </div>
+              <AOSInitializer />
+              <div className="w-full px-5 lg:px-15 lg:pl-20 mt-4">
+                {children}
+              </div>
+            </main>
             <Footer />
           </ThemeProvider>
         </AuthProvider>

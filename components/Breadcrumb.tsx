@@ -49,6 +49,7 @@ export default function UserBreadcrumb() {
     skincare: "保養品",
     essence: "精華液",
     favorites: "心願清單",
+    account: "會員中心",
   };
 
   return (
