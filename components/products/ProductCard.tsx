@@ -55,6 +55,7 @@ export default function ProductCard({
       href={`/products/${product.id}`}
       passHref
       onClick={onClick}
+      data-testid="product-card"
       className={`${containerBase} ${
         isSearch
           ? "flex flex-col p-3 h-[350px]"

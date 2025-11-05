@@ -127,7 +127,10 @@ export default function ProductLists({
         </Select>
       </div>
       {isLoading ? (
-        <div className="flex justify-center mt-40 w-[945px] h-[495px]">
+        <div
+          className="flex justify-center mt-40 w-[945px] h-[495px]"
+          data-testid="loading"
+        >
           <p className="text-muted-foreground">載入中...</p>
         </div>
       ) : filtered.length > 0 ? (
