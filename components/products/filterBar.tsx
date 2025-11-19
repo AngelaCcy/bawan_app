@@ -46,7 +46,7 @@ export default function FilterBar({
       setSelectedPriceRange([min, max]);
       onPriceChange([min, max]);
     }
-  }, [allProducts]);
+  }, [allProducts, onPriceChange]);
 
   const handleFilterToggle = (itemId: string) => {
     //check if the selected checkbox is belongs to Other filter section

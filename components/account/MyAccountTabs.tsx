@@ -39,9 +39,9 @@ export default function MyAccountTabs() {
       {/* <div className=" col-span-9 flex-1 overflow-y-auto p-6"> */}
       <div className="flex-1 overflow-y-auto p-6">
         {activeTab === "profile" && <UserProfile />}
-        {/*
-        {activeTab === 1 && <ProductShippingSection />}
-        {activeTab === 2 && <ProductReviewSection productId={productId} />} */}
+
+        {/* {activeTab === "wishlist" && <Favorites />} */}
+        {/* {activeTab === "orders" && <Orders />} */}
       </div>
     </div>
     // </div>

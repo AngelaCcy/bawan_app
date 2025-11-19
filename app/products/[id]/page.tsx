@@ -21,7 +21,7 @@ const Product = () => {
 
   useEffect(() => {
     if (id) fetchProductById(id);
-  }, [id]);
+  }, [id, fetchProductById]);
 
   // const selectedItem = product?.priceItems.find(
   //   (item) => item.size === selectedSize
