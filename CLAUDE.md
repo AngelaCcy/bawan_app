@@ -187,6 +187,11 @@ if (!ok) return NextResponse.json({ error: "Too many requests" }, { status: 429 
 - Completed plans stay in `/doc/` (archived, not deleted)
 - Active plan is whatever is currently being worked on
 
+**Plan files are the verification checklist.** Before marking a feature done or opening a PR:
+1. Read `doc/plan-<feature>.md` and confirm every requirement is implemented
+2. If a prototype image was provided, view it and compare the live implementation — layout, sections, colors, buttons, and interactions must match
+3. Only close the feature after both plan requirements AND prototype design are verified
+
 ---
 
 ## Changelog
