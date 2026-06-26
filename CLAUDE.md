@@ -183,13 +183,25 @@ if (!ok) return NextResponse.json({ error: "Too many requests" }, { status: 429 
 
 ## Plan files
 
-- One plan per feature: `plan-<feature>.md` at repo root
-- Completed plans stay as `plan-<feature>.md` (archived, not deleted)
+- One plan per feature: `doc/plan-<feature>.md`
+- Completed plans stay in `/doc/` (archived, not deleted)
 - Active plan is whatever is currently being worked on
 
 ---
 
 ## Changelog
 
-- Update `CHANGELOG.md` at repo root after every merged PR
-- Format: `## [date] — branch (PR #N, status)` → `### Added / Fixed / Changed`
+- Add a new file in `/changelog/` after every merged PR
+- Filename: `YYYY-MM-DD-<slug>.md` (e.g. `2026-06-26-landing-page.md`)
+- Format: `# YYYY-MM-DD — Feature Name` → `## Added / Fixed / Changed`
+
+---
+
+## Docs layout
+
+```
+/changelog/   — one .md per change, named YYYY-MM-DD-<slug>.md
+/doc/         — plan files (plan-<feature>.md) and other design docs
+CLAUDE.md     — stays at repo root (required for Claude Code auto-load)
+components/CLAUDE.md — stays in components/ (required for Claude Code auto-load)
+```
