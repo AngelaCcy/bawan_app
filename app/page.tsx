@@ -17,10 +17,10 @@ import {
 export default async function Home() {
   const [topProducts, saleEndTime, newestProduct, essensorieProducts] =
     await Promise.all([
-      getTopProducts(),
-      getSaleEndTime(),
-      getNewestProduct(),
-      getEssensorieProducts(),
+      getTopProducts().catch(() => []),
+      getSaleEndTime().catch(() => null),
+      getNewestProduct().catch(() => null),
+      getEssensorieProducts().catch(() => []),
     ]);
 
   // Negative margins cancel the layout.tsx padding wrapper (px-5 lg:pl-20/px-15, mt-4 ×2)

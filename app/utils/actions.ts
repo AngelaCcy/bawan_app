@@ -413,9 +413,10 @@ export async function getSaleEndTime(): Promise<Date | null> {
   const sale = await prisma.salePrice.findFirst({
     where: {
       startsAt: { lte: now },
-      OR: [{ endsAt: null }, { endsAt: { gt: now } }],
+      endsAt: { gt: now }, // only dated sales — perpetual sales (endsAt: null) have no countdown
     },
     orderBy: { endsAt: "asc" },
+    select: { endsAt: true },
   });
   return sale?.endsAt ?? null;
 }

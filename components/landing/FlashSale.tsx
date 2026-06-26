@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 
 interface Props {
@@ -19,24 +19,28 @@ function getTimeLeft(end: Date) {
   return { h, m, s, done: diff === 0 };
 }
 
+type TimeLeft = ReturnType<typeof getTimeLeft>;
+
 export default function FlashSale({ endTime }: Props) {
-  const target = useMemo(
-    () => endTime ?? new Date(Date.now() + 24 * 60 * 60 * 1000),
-    [endTime]
-  );
-  const [time, setTime] = useState(getTimeLeft(target));
+  // null until client mounts — avoids SSR/hydration mismatch from Date.now()
+  const [time, setTime] = useState<TimeLeft | null>(null);
 
   useEffect(() => {
-    const id = setInterval(() => setTime(getTimeLeft(target)), 1000);
+    if (!endTime) return;
+    setTime(getTimeLeft(endTime));
+    const id = setInterval(() => {
+      const t = getTimeLeft(endTime);
+      setTime(t);
+      if (t.done) clearInterval(id);
+    }, 1000);
     return () => clearInterval(id);
-  }, [target]);
+  }, [endTime]);
 
-  if (time.done) return null;
+  if (!endTime || !time || time.done) return null;
 
   return (
     <section className="bg-[#F5EEE0] py-14" data-aos="fade-up">
       <div className="max-w-4xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-8">
-        {/* Countdown */}
         <div className="text-6xl md:text-8xl font-bold tracking-tight text-gray-800 font-mono">
           {pad(time.h)}
           <span className="text-[#B08866] mx-1">:</span>
@@ -45,7 +49,6 @@ export default function FlashSale({ endTime }: Props) {
           {pad(time.s)}
         </div>
 
-        {/* CTA */}
         <div className="text-center md:text-left">
           <p className="text-sm text-[#B08866] font-medium tracking-widest mb-1">限時折扣</p>
           <p className="text-2xl font-bold text-gray-800 mb-4">
