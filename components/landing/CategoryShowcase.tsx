@@ -17,7 +17,7 @@ export default function CategoryShowcase() {
               {/* Arch frame */}
               <div
                 className="relative w-36 h-48 overflow-hidden shadow-md group-hover:shadow-lg transition-shadow"
-                style={{ borderRadius: "50% 50% 0 0 / 40% 40% 0 0" }}
+                style={{ borderRadius: "50% 50% 0 0 / 60% 60% 0 0" }}
               >
                 <Image
                   src={cat.image}

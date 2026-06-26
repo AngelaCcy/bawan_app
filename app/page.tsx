@@ -1,4 +1,3 @@
-import AOSInitializer from "@/components/AOSInitializer";
 import HeroSection from "@/components/landing/HeroSection";
 import TopTenCarousel from "@/components/landing/TopTenCarousel";
 import FlashSale from "@/components/landing/FlashSale";
@@ -24,9 +23,10 @@ export default async function Home() {
       getEssensorieProducts(),
     ]);
 
+  // Negative margins cancel the layout.tsx padding wrapper (px-5 lg:pl-20/px-15, mt-4 ×2)
+  // so landing sections are full-bleed. Other pages have their own containers.
   return (
-    <>
-      <AOSInitializer />
+    <div className="-mx-5 -mt-8 lg:-ml-20 lg:-mr-15">
       <HeroSection />
       <TopTenCarousel products={topProducts} />
       <FlashSale endTime={saleEndTime} />
@@ -36,6 +36,6 @@ export default async function Home() {
       <MemberCTA />
       <CategoryShowcase />
       <TrustSignals />
-    </>
+    </div>
   );
 }

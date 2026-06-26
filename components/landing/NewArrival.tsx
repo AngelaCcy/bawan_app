@@ -24,12 +24,13 @@ export default function NewArrival({ product }: Props) {
       />
       <div className="absolute inset-0 bg-black/40" />
 
-      <div className="relative z-10 max-w-5xl mx-auto px-6 py-20 flex flex-col md:flex-row items-center gap-12">
+      <div className="relative z-10 max-w-5xl mx-auto px-6 pt-12 pb-20">
+        <h2 className="text-center text-white/90 text-xl tracking-widest mb-10">
+          ～ NEW ～
+        </h2>
+        <div className="flex flex-col md:flex-row items-center gap-12">
         {/* Text */}
         <div className="flex-1 text-white">
-          <span className="inline-block border border-white/60 text-white/80 text-xs tracking-widest px-3 py-1 rounded-full mb-6">
-            ～ NEW ～
-          </span>
           <p className="text-xs text-white/70 mb-2">{product.category}</p>
           <h2 className="text-3xl md:text-4xl font-bold mb-4 leading-snug">
             {product.brand}<br />
@@ -56,6 +57,7 @@ export default function NewArrival({ product }: Props) {
               className="object-contain drop-shadow-2xl"
             />
           </div>
+        </div>
         </div>
       </div>
     </section>
