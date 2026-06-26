@@ -49,6 +49,23 @@ export const reviewValidation = z.object({
 
 export type ReviewFormData = z.infer<typeof reviewValidation>;
 
+export const AddressValidation = z.object({
+  label: z.string().min(1, "請輸入地址標籤").max(20),
+  recipient: z.string().min(1, "收件人是必填欄位").max(50),
+  phone: z
+    .string()
+    .min(1, "電話是必填欄位")
+    .regex(/^\d{10}$/, "電話格式不符合"),
+  street: z.string().min(1, "街道地址是必填欄位"),
+  district: z.string().min(1, "區是必填欄位"),
+  city: z.string().min(1, "城市是必填欄位"),
+  postalCode: z.string().min(3, "郵遞區號是必填欄位"),
+  country: z.string().default("TW"),
+  isDefault: z.boolean().default(false),
+});
+
+export type AddressForm = z.infer<typeof AddressValidation>;
+
 export const ProfileValidation = z.object({
   name: z.string().min(1, "姓名是必填欄位").max(50, "姓名需少於50個字"),
   gender: z.enum(["女生", "男生"]),

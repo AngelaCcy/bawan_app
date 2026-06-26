@@ -102,6 +102,9 @@ export class AccountPage extends BasePage {
   readonly profileTab: Locator;
   readonly wishlistTab: Locator;
   readonly ordersTab: Locator;
+  readonly addressTab: Locator;
+  readonly paymentTab: Locator;
+  readonly adminTab: Locator;
   readonly editButton: Locator;
   readonly profileForm: Locator;
 
@@ -110,6 +113,9 @@ export class AccountPage extends BasePage {
     this.profileTab = page.getByRole('button', { name: '會員中心' });
     this.wishlistTab = page.getByRole('button', { name: '心願清單' });
     this.ordersTab = page.getByRole('button', { name: '訂單追蹤' });
+    this.addressTab = page.getByRole('button', { name: '送貨資料' });
+    this.paymentTab = page.getByRole('button', { name: '付款方式' });
+    this.adminTab = page.getByRole('button', { name: '管理員' });
     this.editButton = page.getByRole('button', { name: '編輯' });
     this.profileForm = page.locator('form');
   }
