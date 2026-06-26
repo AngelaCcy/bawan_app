@@ -20,6 +20,8 @@ const buttonVariants = cva(
         ghost: "dark:hover:bg-accent/50",
         link: "text-primary underline-offset-4 hover:underline",
         custom: "bg-[#9E7C59] text-white shadow-xs hover:bg-[#8A6A4A]",
+        custom_outline:
+          "border border-[#9E7C59] text-[#9E7C59] shadow-xs hover:bg-[#d6ccc2] ",
         quantityBtn:
           "w-10 h-10 p-0 rounded-full border-2 border-[#9E7C59] bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
       },

@@ -1,8 +1,8 @@
 // stores/useProductStore.ts
 import { create } from "zustand";
 // import { Product } from "@prisma/client";
-import { getProducts, getProductById } from "@/app/utils/actions";
-import { ProductWithPrice } from "../types/product";
+import { getAllProducts, getProductById } from "@/app/utils/actions";
+import { ProductWithPrice } from "@/app/types/product";
 
 type Store = {
   allProducts: ProductWithPrice[]; // For lists
@@ -26,7 +26,7 @@ export const useProductStore = create<Store & Actions>((set) => ({
   fetchAllProducts: async () => {
     set({ isLoading: true });
     try {
-      const data = await getProducts();
+      const data = await getAllProducts();
       set({ allProducts: data, isLoading: false });
     } catch (error) {
       set({ error, isLoading: false });

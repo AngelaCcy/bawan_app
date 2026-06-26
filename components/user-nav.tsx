@@ -30,6 +30,11 @@ const UserNav = () => {
     }
   };
 
+  const menuItemStyle =
+    "p-0 flex justify-center data-[highlighted]:bg-transparent focus:bg-transparent";
+  const menuItemLinkStyle =
+    "w-full py-2 flex justify-center items-center text-[var(--icon)] hover:text-[var(--icon-hover)] transition-colors duration-200";
+
   return (
     <div className="flex justify-center">
       <SearchOverlay />
@@ -47,18 +52,20 @@ const UserNav = () => {
             align="end"
             className="w-32 mt-2 bg-navbar p-2 flex flex-col gap-2 border-none"
           >
-            <DropdownMenuItem className="p-0 flex justify-center data-[highlighted]:bg-transparent focus:bg-transparent">
-              <Link
-                href="/profile"
-                className="w-full py-2 flex justify-center items-center text-[var(--icon)] hover:text-[var(--icon-hover)] transition-colors duration-200"
-              >
+            <DropdownMenuItem className={menuItemStyle}>
+              <Link href="/account" className={menuItemLinkStyle}>
                 會員中心
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem className="p-0 flex justify-center data-[highlighted]:bg-transparent focus:bg-transparent">
+            <DropdownMenuItem className={menuItemStyle}>
+              <Link href="/account" className={menuItemLinkStyle}>
+                訂單追蹤
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem className={menuItemStyle}>
               <button
                 onClick={() => signOut({ callbackUrl: "/" })}
-                className="w-full py-2 flex justify-center items-center text-[var(--icon)] hover:text-[var(--icon-hover)] transition-colors duration-200"
+                className={menuItemLinkStyle}
               >
                 登出
               </button>

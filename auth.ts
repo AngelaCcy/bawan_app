@@ -1,24 +1,27 @@
 import Google from "next-auth/providers/google";
-// import GitHub from "next-auth/providers/github";
 import Line from "next-auth/providers/line";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import NextAuth from "next-auth";
+import NextAuth, { DefaultSession } from "next-auth";
 import Nodemailer from "next-auth/providers/nodemailer";
 import prisma from "./lib/prisma";
+import { Role } from "@prisma/client";
+
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id: string;
+      role: Role;
+    } & DefaultSession["user"];
+  }
+  interface User {
+    role: Role;
+  }
+}
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  debug: true,
+  debug: process.env.NODE_ENV === "development",
   providers: [
-    Google({
-      allowDangerousEmailAccountLinking: true,
-      // authorization: {
-      //   params: {
-      //     // request name, avatar, locale, etc.
-      //     scope: "openid email profile",
-      //   },
-      // },
-    }),
-    // GitHub({ allowDangerousEmailAccountLinking: true }),
+    Google({ allowDangerousEmailAccountLinking: true }),
     Nodemailer({
       server: {
         host: process.env.EMAIL_SERVER_HOST,
@@ -31,30 +34,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       from: process.env.EMAIL_FROM,
     }),
     Line({
-      authorization: {
-        params: {
-          scope: "openid profile email",
-        },
-      },
+      authorization: { params: { scope: "openid profile email" } },
       allowDangerousEmailAccountLinking: true,
       checks: ["state"],
     }),
   ],
-  adapter: PrismaAdapter(prisma),
-  // callbacks: {
-  //   async signIn({ account, profile, user }) {
-  //     if (!account || !profile) {
-  //       return false; // or handle appropriately
-  //     }
-  //     if (account.provider === "github" && profile.email === user.email) {
-  //       return true;
-  //     }
-
-  //     if (account.provider === "google" && profile.email === user.email) {
-  //       return true;
-  //     }
-
-  //     return true; // Allow sign-in for other cases
-  //   },
-  // },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  adapter: PrismaAdapter(prisma) as any,
+  callbacks: {
+    session({ session, user }) {
+      session.user.id = user.id;
+      session.user.role = user.role;
+      return session;
+    },
+  },
 });

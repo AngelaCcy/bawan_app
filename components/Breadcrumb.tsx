@@ -36,17 +36,24 @@ export default function UserBreadcrumb() {
     fetchProductName();
   }, [isProductDetailPage, segments]);
 
-  if (pathname === "/" || pathname === "/signin" || pathname === "/signup")
+  if (
+    pathname === "/" ||
+    pathname === "/signin" ||
+    pathname === "/signup" ||
+    pathname.startsWith("/search")
+  )
     return null;
 
   const nameMap: Record<string, string> = {
     products: "全部商品",
     skincare: "保養品",
     essence: "精華液",
+    favorites: "心願清單",
+    account: "會員中心",
   };
 
   return (
-    <Breadcrumb className="lg:mt-15 mt-25">
+    <Breadcrumb className=" pb-3 mt-28">
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink href="/">

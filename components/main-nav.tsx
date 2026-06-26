@@ -24,7 +24,7 @@ const MainNav = () => {
         className={cn(
           "absolute top-full left-0 w-full border dark:bg-gray-900",
           "lg:border-none lg:static lg:flex lg:space-x-5",
-          menuOpen ? "block bg-navbar flex flex-col items-center" : "hidden"
+          menuOpen ? " bg-navbar flex flex-col items-center" : "hidden"
         )}
       >
         {mainNavLinks.map((link) => (
@@ -32,7 +32,7 @@ const MainNav = () => {
             key={link.title}
             href={link.url}
             className={cn(
-              "block py-2 px-2 text-sm lg:text-lg transition-colors flex items-center gap-1 nav-icon whitespace-nowrap",
+              "py-2 px-2 text-sm lg:text-lg transition-colors flex items-center gap-1 nav-icon whitespace-nowrap",
               menuOpen ? "justify-center w-full" : "",
               pathName === link.url ? "border-b-2 border-white" : ""
             )}

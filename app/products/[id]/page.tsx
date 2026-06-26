@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
-import { useProductStore } from "@/app/stores/useProductStore";
+import { useProductStore } from "@/hooks/useProductStore";
 import ProductImageCarousel from "@/components/products/ProductImageCarousel";
 import ProductDetailTabs from "@/components/products/ProductDetailTabs";
 import ProductInfoPanel from "@/components/products/ProductInfoPanel";
@@ -21,7 +21,7 @@ const Product = () => {
 
   useEffect(() => {
     if (id) fetchProductById(id);
-  }, [id]);
+  }, [id, fetchProductById]);
 
   // const selectedItem = product?.priceItems.find(
   //   (item) => item.size === selectedSize
