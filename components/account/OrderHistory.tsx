@@ -69,7 +69,7 @@ export default function OrderHistory() {
                 <div key={item.id} className="flex gap-3 items-center">
                   {item.image ? (
                     <Image
-                      src={item.image}
+                      src={item.image.startsWith("http") || item.image.startsWith("/") ? item.image : `/img/${item.brand}/${item.image}`}
                       alt={item.name}
                       width={56}
                       height={56}
