@@ -1,12 +1,10 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-// import { Product } from "./fake-data";
-// import { SaleProduct } from "@/app/utils/fake-data";
 import { auth } from "@/auth";
-import { User } from "@/lib/validations/auth";
+import { User, AddressForm } from "@/lib/validations/auth";
 import { ProfileForm } from "../types/product";
-import { Prisma } from "@prisma/client";
+import { Prisma, Role } from "@prisma/client";
 
 export async function getAllProducts() {
   const data = await prisma.product.findMany({
@@ -298,14 +296,112 @@ export async function createReview({
   userId: string;
 }) {
   const review = await prisma.review.create({
-    data: {
-      productId,
-      title,
-      content,
-      rating,
-      userId,
-    },
+    data: { productId, title, content, rating, userId },
   });
-
   return review;
+}
+
+// ─── Address actions ────────────────────────────────────────────────────────
+
+export async function getUserAddresses() {
+  const session = await auth();
+  if (!session?.user?.id) return [];
+  return prisma.address.findMany({
+    where: { userId: session.user.id },
+    orderBy: [{ isDefault: "desc" }, { createdAt: "asc" }],
+  });
+}
+
+export async function createAddress(data: AddressForm) {
+  const session = await auth();
+  if (!session?.user?.id) throw new Error("Unauthorized");
+
+  if (data.isDefault) {
+    await prisma.address.updateMany({
+      where: { userId: session.user.id },
+      data: { isDefault: false },
+    });
+  }
+
+  return prisma.address.create({
+    data: { ...data, userId: session.user.id },
+  });
+}
+
+export async function updateAddress(id: string, data: AddressForm) {
+  const session = await auth();
+  if (!session?.user?.id) throw new Error("Unauthorized");
+
+  const existing = await prisma.address.findUnique({ where: { id } });
+  if (!existing || existing.userId !== session.user.id) throw new Error("Not found");
+
+  if (data.isDefault) {
+    await prisma.address.updateMany({
+      where: { userId: session.user.id, id: { not: id } },
+      data: { isDefault: false },
+    });
+  }
+
+  return prisma.address.update({ where: { id }, data });
+}
+
+export async function deleteAddress(id: string) {
+  const session = await auth();
+  if (!session?.user?.id) throw new Error("Unauthorized");
+
+  const existing = await prisma.address.findUnique({ where: { id } });
+  if (!existing || existing.userId !== session.user.id) throw new Error("Not found");
+
+  return prisma.address.delete({ where: { id } });
+}
+
+export async function setDefaultAddress(id: string) {
+  const session = await auth();
+  if (!session?.user?.id) throw new Error("Unauthorized");
+
+  await prisma.address.updateMany({
+    where: { userId: session.user.id },
+    data: { isDefault: false },
+  });
+  return prisma.address.update({ where: { id }, data: { isDefault: true } });
+}
+
+// ─── Order actions ───────────────────────────────────────────────────────────
+
+export async function getUserOrders() {
+  const session = await auth();
+  if (!session?.user?.id) return [];
+  return prisma.order.findMany({
+    where: { userId: session.user.id },
+    include: { items: true },
+    orderBy: { createdAt: "desc" },
+  });
+}
+
+// ─── Admin actions ───────────────────────────────────────────────────────────
+
+export async function getAllUsers() {
+  const session = await auth();
+  if (session?.user?.role !== "ADMIN") throw new Error("Unauthorized");
+  return prisma.user.findMany({
+    select: { id: true, name: true, email: true, role: true, createdAt: true, image: true },
+    orderBy: { createdAt: "desc" },
+  });
+}
+
+export async function updateUserRole(userId: string, role: Role) {
+  const session = await auth();
+  if (session?.user?.role !== "ADMIN") throw new Error("Unauthorized");
+  return prisma.user.update({ where: { id: userId }, data: { role } });
+}
+
+// ─── Avatar ──────────────────────────────────────────────────────────────────
+
+export async function updateUserAvatar(imageUrl: string) {
+  const session = await auth();
+  if (!session?.user?.id) throw new Error("Unauthorized");
+  return prisma.user.update({
+    where: { id: session.user.id },
+    data: { image: imageUrl },
+  });
 }
