@@ -359,6 +359,9 @@ export async function setDefaultAddress(id: string) {
   const session = await auth();
   if (!session?.user?.id) throw new Error("Unauthorized");
 
+  const existing = await prisma.address.findUnique({ where: { id } });
+  if (!existing || existing.userId !== session.user.id) throw new Error("Not found");
+
   await prisma.address.updateMany({
     where: { userId: session.user.id },
     data: { isDefault: false },
