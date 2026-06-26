@@ -1,5 +1,9 @@
 # Plan: Landing Page (Figma-matched)
 
+## Prototype
+
+`public/prototype/cream1.png` — full-page Figma prototype screenshot. Use this to verify layout and design against the implementation.
+
 ## Goal
 
 Implement the Figma-designed landing page for `/`. Anonymous visitors and members see a full marketing page that matches the warm-beige bawan aesthetic. Done means all 9 sections rendered, responsive, data-driven where applicable, AOS animated on scroll.
