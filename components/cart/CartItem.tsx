@@ -5,6 +5,7 @@ import { Button } from "../ui/button";
 import { Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
 import QuantityController from "../QuantityController";
+import { productImageSrc } from "@/lib/utils";
 
 export default function CartItem({ item }: { item: CartItemType }) {
   const removeFromCart = useCartStore((state) => state.removeFromCart);
@@ -16,7 +17,7 @@ export default function CartItem({ item }: { item: CartItemType }) {
       className="flex items-start gap-8 mb-4 border-b-1 pb-5 border-black"
     >
       <Image
-        src={`/img/${item.brand}/${item.image}`}
+        src={productImageSrc(item.brand, item.image)}
         alt={item.title}
         width={400}
         height={400}

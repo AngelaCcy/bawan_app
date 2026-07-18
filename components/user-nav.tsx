@@ -62,6 +62,13 @@ const UserNav = () => {
                 訂單追蹤
               </Link>
             </DropdownMenuItem>
+            {currentUser.role === "ADMIN" && (
+              <DropdownMenuItem className={menuItemStyle}>
+                <Link href="/admin/products/import" className={menuItemLinkStyle}>
+                  商品匯入
+                </Link>
+              </DropdownMenuItem>
+            )}
             <DropdownMenuItem className={menuItemStyle}>
               <button
                 onClick={() => signOut({ callbackUrl: "/" })}

@@ -2,7 +2,7 @@
 // Runs in the browser (ExcelJS is dynamically imported so it never enters
 // shopper bundles); no React in this file so everything is unit-testable.
 
-import type { Workbook, Worksheet, Cell } from "exceljs";
+import type { Workbook, Worksheet, Cell, Media } from "exceljs";
 import {
   ColumnMapping,
   ParsedProduct,
@@ -14,15 +14,9 @@ import {
 
 // ---------- workbook parsing ----------
 
-// ExcelJS's TS defs don't type workbook.model.media, but it is the documented
-// way to read embedded images (matched to rows via worksheet.getImages()).
-type MediaItem = {
-  type: string;
-  name?: string;
-  extension: string;
-  buffer: Uint8Array;
-  index?: number;
-};
+// ExcelJS types media items without the runtime `index` field that
+// worksheet.getImages() imageIds refer to.
+type MediaItem = Media & { index?: number };
 
 const IMAGE_MIME: Record<string, string> = {
   png: "image/png",
@@ -74,7 +68,7 @@ function extractRowImages(
   worksheet: Worksheet
 ): Map<number, { dataUrl: string; ext: string }> {
   const result = new Map<number, { dataUrl: string; ext: string }>();
-  const media = (workbook.model as { media?: MediaItem[] }).media ?? [];
+  const media: MediaItem[] = workbook.model.media ?? [];
 
   for (const image of worksheet.getImages()) {
     const id = Number(image.imageId);
@@ -87,8 +81,11 @@ function extractRowImages(
     const mime = IMAGE_MIME[ext] ?? "image/png";
     const rowNumber = Math.floor(image.range.tl.nativeRow) + 1;
     if (!result.has(rowNumber)) {
+      // exceljs types buffer as ArrayBuffer but yields Uint8Array at runtime;
+      // the Uint8Array constructor handles both
+      const bytes = new Uint8Array(item.buffer);
       result.set(rowNumber, {
-        dataUrl: `data:${mime};base64,${toBase64(item.buffer)}`,
+        dataUrl: `data:${mime};base64,${toBase64(bytes)}`,
         ext,
       });
     }

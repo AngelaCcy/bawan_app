@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ProductWithPrice } from "@/app/types/product";
 import { getActiveSale, isLimitedTime } from "@/app/utils/filtering";
+import { productImageSrc } from "@/lib/utils";
 import PriceDisplay from "./PriceDisplay";
 import SizeSelector from "./SizeSelector";
 
@@ -72,25 +73,20 @@ export default function ProductCard({
             期間限定
           </span>
         )}
+        {product.isPreorder && (
+          <span className="absolute top-2 left-2 z-10 bg-[#B08866] text-white text-sm px-4 py-2 rounded-full shadow">
+            預購{product.arrivalNote ? `・${product.arrivalNote}` : ""}
+          </span>
+        )}
 
         {/* Product Image */}
-        {isSearch ? (
-          <Image
-            src={`/img/${product.brand}/${product.image[0]}`}
-            alt={product.title}
-            fill
-            className="object-cover"
-            priority
-          />
-        ) : (
-          <Image
-            src={`/img/${product.brand}/${product.image[0]}`}
-            alt={product.title}
-            fill
-            className="object-cover"
-            priority
-          />
-        )}
+        <Image
+          src={productImageSrc(product.brand, product.image[0])}
+          alt={product.title}
+          fill
+          className="object-cover"
+          priority
+        />
       </div>
 
       {/* Info Section */}

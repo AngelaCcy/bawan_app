@@ -6,6 +6,7 @@ import { Navigation, Thumbs, FreeMode } from "swiper/modules";
 import Image from "next/image";
 import { useState } from "react";
 import type { Swiper as SwiperType } from "swiper";
+import { productImageSrc } from "@/lib/utils";
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/free-mode";
@@ -34,7 +35,7 @@ export default function ProductImageCarousel({ images, brand }: Props) {
         {images.map((fileName, idx) => (
           <SwiperSlide key={idx}>
             <Image
-              src={`/img/${brand}/${fileName}`}
+              src={productImageSrc(brand, fileName)}
               alt={`Product image ${idx + 1}`}
               width={400}
               height={400}
@@ -58,7 +59,7 @@ export default function ProductImageCarousel({ images, brand }: Props) {
           {images.map((fileName, idx) => (
             <SwiperSlide key={`thumb-${idx}`} className="cursor-pointer">
               <Image
-                src={`/img/${brand}/${fileName}`}
+                src={productImageSrc(brand, fileName)}
                 alt={`Thumbnail ${idx + 1}`}
                 width={80}
                 height={100}
