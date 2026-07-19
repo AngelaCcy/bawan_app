@@ -178,7 +178,7 @@ export default function MappingStep({
         <Button
           onClick={onNext}
           disabled={!canProceed}
-          className="bg-[#9E7C59] hover:bg-[#8A6A4A] text-white"
+          variant="custom"
           data-testid="mapping-next"
         >
           下一步：預覽

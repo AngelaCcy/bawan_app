@@ -69,12 +69,12 @@ function extractRowImages(
 ): Map<number, { dataUrl: string; ext: string }> {
   const result = new Map<number, { dataUrl: string; ext: string }>();
   const media: MediaItem[] = workbook.model.media ?? [];
+  const mediaByIndex = new Map<number, MediaItem>();
+  media.forEach((m, i) => mediaByIndex.set(m.index ?? i, m));
 
   for (const image of worksheet.getImages()) {
     const id = Number(image.imageId);
-    const item =
-      media.find((m) => m.index === id) ??
-      (Number.isInteger(id) ? media[id] : undefined);
+    const item = mediaByIndex.get(id);
     if (!item?.buffer) continue;
 
     const ext = item.extension?.toLowerCase() ?? "png";

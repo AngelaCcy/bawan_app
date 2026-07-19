@@ -46,8 +46,10 @@ function effective(p: ParsedProduct, edit: RowEdit | undefined) {
   };
 }
 
-function isValid(p: ParsedProduct, edit: RowEdit | undefined) {
-  const e = effective(p, edit);
+function isEffectiveValid(
+  p: ParsedProduct,
+  e: ReturnType<typeof effective>
+) {
   return (
     p.errors.length === 0 &&
     e.brand.length > 0 &&
@@ -56,6 +58,10 @@ function isValid(p: ParsedProduct, edit: RowEdit | undefined) {
     e.price !== null &&
     e.price > 0
   );
+}
+
+function isValid(p: ParsedProduct, edit: RowEdit | undefined) {
+  return isEffectiveValid(p, effective(p, edit));
 }
 
 const PreviewRow = memo(function PreviewRow({
@@ -75,8 +81,8 @@ const PreviewRow = memo(function PreviewRow({
   onToggle: (key: string) => void;
   onEdit: (key: string, patch: RowEdit) => void;
 }) {
-  const valid = isValid(product, edit);
   const e = effective(product, edit);
+  const valid = isEffectiveValid(product, e);
 
   return (
     <TableRow data-testid="preview-row" className={valid ? "" : "bg-red-50"}>
@@ -252,6 +258,7 @@ export default function PreviewStep({
     setSelection(
       new Set(products.filter((p) => isValid(p, undefined)).map((p) => p.key))
     );
+    setDuplicates(new Set());
     setDupesLoaded(false);
   }, [products]);
 
@@ -312,11 +319,16 @@ export default function PreviewStep({
     [products]
   );
 
-  const invalidCount = products.filter((p) => !isValid(p, edits[p.key])).length;
-  const selectedCount = [...selection].filter((key) => {
-    const p = products.find((x) => x.key === key);
-    return p && isValid(p, edits[p.key]);
-  }).length;
+  const { invalidCount, selectedCount } = useMemo(() => {
+    let invalid = 0;
+    let selected = 0;
+    for (const p of products) {
+      const valid = isValid(p, edits[p.key]);
+      if (!valid) invalid++;
+      else if (selection.has(p.key)) selected++;
+    }
+    return { invalidCount: invalid, selectedCount: selected };
+  }, [products, edits, selection]);
 
   function handleConfirm() {
     const finals: FinalProduct[] = [];
@@ -388,7 +400,7 @@ export default function PreviewStep({
           <Button
             onClick={handleConfirm}
             disabled={importing || selectedCount === 0}
-            className="bg-[#9E7C59] hover:bg-[#8A6A4A] text-white"
+            variant="custom"
             data-testid="import-confirm"
           >
             {importing ? "匯入中…" : `匯入 ${selectedCount} 筆商品`}

@@ -10,7 +10,7 @@ import {
   SheetConfig,
 } from "@/app/types/product-import";
 import { applyMapping, dataUrlToBlob } from "@/lib/xlsx-import";
-import { importProducts } from "@/app/utils/admin-actions";
+import { findExistingSkus, importProducts } from "@/app/utils/admin-actions";
 import {
   ImportProductInput,
   IMPORT_BATCH_SIZE,
@@ -96,12 +96,31 @@ export default function ImportWizard() {
   async function handleImport(selected: FinalProduct[]) {
     setImporting(true);
     setImageFailures(0);
+    const summary: ImportResultSummary = {
+      created: 0,
+      skipped: [],
+      failed: [],
+    };
     try {
+      // Phase 0: drop rows whose sku already exists before spending Blob
+      // uploads on them (the server re-checks at create time regardless)
+      let toImport = selected;
+      const skus = selected.map((p) => p.sku).filter(Boolean);
+      if (skus.length > 0) {
+        const existing = new Set(await findExistingSkus(skus));
+        toImport = selected.filter((p) => !p.sku || !existing.has(p.sku));
+        summary.skipped.push(
+          ...selected
+            .filter((p) => p.sku && existing.has(p.sku))
+            .map((p) => ({ sku: p.sku, title: p.title }))
+        );
+      }
+
       // Phase 1: browser -> Vercel Blob (direct upload, small concurrency)
-      setProgress({ phase: "images", done: 0, total: selected.length });
+      setProgress({ phase: "images", done: 0, total: toImport.length });
       let done = 0;
       let failures = 0;
-      const imageUrls = await mapWithConcurrency(selected, 4, async (p) => {
+      const imageUrls = await mapWithConcurrency(toImport, 4, async (p) => {
         let url: string | null = null;
         if (p.imageDataUrl) {
           try {
@@ -121,13 +140,17 @@ export default function ImportWizard() {
           }
         }
         done++;
-        setProgress({ phase: "images", done, total: selected.length });
+        // Throttled: a state update per image would re-render the whole
+        // preview table hundreds of times during a large import
+        if (done % 10 === 0 || done === toImport.length) {
+          setProgress({ phase: "images", done, total: toImport.length });
+        }
         return url;
       });
       setImageFailures(failures);
 
       // Phase 2: batched server-action creates
-      const inputs: ImportProductInput[] = selected.map((p, i) => ({
+      const inputs: ImportProductInput[] = toImport.map((p, i) => ({
         sku: p.sku || undefined,
         barcode: p.barcode || undefined,
         brand: p.brand,
@@ -140,11 +163,6 @@ export default function ImportWizard() {
         priceItems: [{ size: p.size, price: p.price, stock: p.stock }],
       }));
 
-      const summary: ImportResultSummary = {
-        created: 0,
-        skipped: [],
-        failed: [],
-      };
       const batches: ImportProductInput[][] = [];
       for (let i = 0; i < inputs.length; i += IMPORT_BATCH_SIZE) {
         batches.push(inputs.slice(i, i + IMPORT_BATCH_SIZE));
@@ -152,10 +170,22 @@ export default function ImportWizard() {
       setProgress({ phase: "products", done: 0, total: inputs.length });
       let imported = 0;
       for (const batch of batches) {
-        const batchResult = await importProducts(batch);
-        summary.created += batchResult.created;
-        summary.skipped.push(...batchResult.skipped);
-        summary.failed.push(...batchResult.failed);
+        try {
+          const batchResult = await importProducts(batch);
+          summary.created += batchResult.created;
+          summary.skipped.push(...batchResult.skipped);
+          summary.failed.push(...batchResult.failed);
+        } catch {
+          // A failed call must not lose the summary of what was already
+          // created — record the batch and keep going
+          summary.failed.push(
+            ...batch.map((p) => ({
+              sku: p.sku ?? "",
+              title: p.title,
+              error: "連線失敗，此批未匯入",
+            }))
+          );
+        }
         imported += batch.length;
         setProgress({ phase: "products", done: imported, total: inputs.length });
       }
@@ -164,8 +194,13 @@ export default function ImportWizard() {
       setStep("result");
       if (summary.created > 0) toast.success(`已匯入 ${summary.created} 筆商品`);
     } catch (error) {
+      // Even on unexpected errors, surface whatever partial progress exists
       const message = error instanceof Error ? error.message : "匯入失敗";
       toast.error(message);
+      if (summary.created + summary.skipped.length + summary.failed.length > 0) {
+        setResult(summary);
+        setStep("result");
+      }
     } finally {
       setImporting(false);
       setProgress(null);

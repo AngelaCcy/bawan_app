@@ -62,11 +62,7 @@ export default function AdminPanel() {
         <p className="text-sm text-gray-400 mb-3">
           上傳廠商報價單（.xlsx），預覽並批次加入商品
         </p>
-        <Button
-          asChild
-          className="bg-[#9E7C59] hover:bg-[#8A6A4A] text-white"
-          data-testid="admin-import-link"
-        >
+        <Button asChild variant="custom" data-testid="admin-import-link">
           <Link href="/admin/products/import">批次匯入商品</Link>
         </Button>
       </div>

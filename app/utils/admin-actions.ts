@@ -15,9 +15,7 @@ async function requireAdmin() {
   return session;
 }
 
-/** Returns which of the given vendor SKUs already exist as products. */
-export async function findExistingSkus(skus: string[]): Promise<string[]> {
-  await requireAdmin();
+async function querySkus(skus: string[]): Promise<string[]> {
   const cleaned = [...new Set(skus.filter((s) => s.trim()))];
   if (cleaned.length === 0) return [];
   const existing = await prisma.product.findMany({
@@ -25,6 +23,12 @@ export async function findExistingSkus(skus: string[]): Promise<string[]> {
     select: { sku: true },
   });
   return existing.map((p) => p.sku).filter((s): s is string => s !== null);
+}
+
+/** Returns which of the given vendor SKUs already exist as products. */
+export async function findExistingSkus(skus: string[]): Promise<string[]> {
+  await requireAdmin();
+  return querySkus(skus);
 }
 
 /**
@@ -39,14 +43,22 @@ export async function importProducts(
   const batch = importBatchSchema.parse(products);
 
   const skus = batch.map((p) => p.sku).filter((s): s is string => !!s);
-  const existing = new Set(
-    skus.length > 0 ? await findExistingSkus(skus) : []
-  );
+  const existing = new Set(await querySkus(skus));
 
-  const toCreate = batch.filter((p) => !p.sku || !existing.has(p.sku));
-  const skipped = batch
-    .filter((p) => p.sku && existing.has(p.sku))
-    .map((p) => ({ sku: p.sku as string, title: p.title }));
+  // Skip products whose sku is already in the DB, and dedupe skus within the
+  // batch itself (same 品號 on 現貨 + 預購 sheets would violate @unique and
+  // roll back the whole transaction)
+  const seenInBatch = new Set<string>();
+  const toCreate: typeof batch = [];
+  const skipped: { sku: string; title: string }[] = [];
+  for (const p of batch) {
+    if (p.sku && (existing.has(p.sku) || seenInBatch.has(p.sku))) {
+      skipped.push({ sku: p.sku, title: p.title });
+      continue;
+    }
+    if (p.sku) seenInBatch.add(p.sku);
+    toCreate.push(p);
+  }
 
   const result: ImportResultSummary = { created: 0, skipped, failed: [] };
   if (toCreate.length > 0) {
@@ -72,13 +84,13 @@ export async function importProducts(
       );
       result.created = toCreate.length;
     } catch (error) {
-      // Transaction is all-or-nothing: report the whole batch as failed
-      const message =
-        error instanceof Error ? error.message : "資料庫寫入失敗";
+      // Transaction is all-or-nothing: report the whole batch as failed.
+      // Details go to the server log; the UI gets a zh-TW message.
+      console.error("importProducts batch failed:", error);
       result.failed = toCreate.map((p) => ({
         sku: p.sku ?? "",
         title: p.title,
-        error: message,
+        error: "資料庫寫入失敗，此批未匯入",
       }));
     }
   }

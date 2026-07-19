@@ -14,9 +14,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Too many requests" }, { status: 429 });
   }
 
-  const body = (await req.json()) as HandleUploadBody;
-
   try {
+    const body = (await req.json()) as HandleUploadBody;
     const jsonResponse = await handleUpload({
       body,
       request: req,
@@ -27,11 +26,13 @@ export async function POST(req: NextRequest) {
           throw new Error("Invalid upload path");
         }
         return {
+          // Keep in sync with IMAGE_MIME in lib/xlsx-import.ts
           allowedContentTypes: [
             "image/png",
             "image/jpeg",
             "image/gif",
             "image/webp",
+            "image/bmp",
           ],
           maximumSizeInBytes: 10 * 1024 * 1024,
           addRandomSuffix: true,

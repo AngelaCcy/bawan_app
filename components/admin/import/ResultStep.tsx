@@ -50,8 +50,8 @@ export default function ResultStep({
         <div className="border rounded-lg p-4">
           <h3 className="text-sm font-medium mb-2">已存在（依品號略過）</h3>
           <ul className="text-sm text-gray-500 space-y-1 max-h-40 overflow-y-auto">
-            {result.skipped.map((s) => (
-              <li key={s.sku}>
+            {result.skipped.map((s, i) => (
+              <li key={`${s.sku}-${i}`}>
                 {s.sku} — {s.title}
               </li>
             ))}
@@ -73,10 +73,7 @@ export default function ResultStep({
       )}
 
       <div className="flex gap-3">
-        <Button
-          onClick={onReset}
-          className="bg-[#9E7C59] hover:bg-[#8A6A4A] text-white"
-        >
+        <Button onClick={onReset} variant="custom">
           再匯入一批
         </Button>
         <Button asChild variant="outline">
