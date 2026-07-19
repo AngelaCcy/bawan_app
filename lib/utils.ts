@@ -12,7 +12,11 @@ export function productImageSrc(
   filename: string | undefined
 ): string {
   if (!filename) return "/img/placeholder.svg";
-  if (filename.startsWith("http://") || filename.startsWith("https://")) {
+  if (
+    filename.startsWith("http://") ||
+    filename.startsWith("https://") ||
+    filename.startsWith("/") // already a full local path
+  ) {
     return filename;
   }
   return `/img/${brand}/${filename}`;
