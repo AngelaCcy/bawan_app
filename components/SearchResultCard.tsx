@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ProductWithPrice } from "@/app/types/product";
 import { getActiveSale, isLimitedTime } from "@/app/utils/filtering";
+import { productImageSrc } from "@/lib/utils";
 import PriceDisplay from "./products/PriceDisplay";
 import SizeSelector from "./products/SizeSelector";
 
@@ -55,7 +56,7 @@ export default function SearchResultCard({ product, onClick }: Props) {
 
         {/* Product Image */}
         <Image
-          src={`/img/${product.brand}/${product.image[0]}`}
+          src={productImageSrc(product.brand, product.image[0])}
           alt={product.title}
           fill
           className="object-cover"

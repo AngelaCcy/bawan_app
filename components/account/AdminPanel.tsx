@@ -5,7 +5,8 @@ import { Role } from "@prisma/client";
 import { getAllUsers, updateUserRole } from "@/app/utils/actions";
 import { toast } from "react-hot-toast";
 import Image from "next/image";
-import { UserIcon, ShieldCheck, User } from "lucide-react";
+import Link from "next/link";
+import { UserIcon, ShieldCheck, User, PackagePlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 
@@ -51,6 +52,19 @@ export default function AdminPanel() {
       <div className="flex items-center gap-2 mb-6">
         <ShieldCheck className="w-5 h-5 text-[#B08866]" />
         <h2 className="text-2xl font-semibold">管理員面板</h2>
+      </div>
+
+      <div className="border rounded-lg p-4 mb-6">
+        <div className="flex items-center gap-2 mb-2">
+          <PackagePlus className="w-4 h-4 text-[#B08866]" />
+          <h3 className="text-lg font-medium">商品管理</h3>
+        </div>
+        <p className="text-sm text-gray-400 mb-3">
+          上傳廠商報價單（.xlsx），預覽並批次加入商品
+        </p>
+        <Button asChild variant="custom" data-testid="admin-import-link">
+          <Link href="/admin/products/import">批次匯入商品</Link>
+        </Button>
       </div>
 
       {loading ? (

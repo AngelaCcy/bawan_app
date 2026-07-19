@@ -93,7 +93,7 @@ export default function ProductInfoPanel({ product }: Props) {
           size={selectedItem.size}
           stock={selectedItem.stock}
           price={activeSale?.price ?? selectedItem.price}
-          image={product.image[0]}
+          image={product.image[0] ?? ""}
         />
       )}
       {/* Insert stock alert here */}

@@ -20,6 +20,10 @@ model Product {
   usage          String?
   availableFrom  DateTime?
   availableUntil DateTime?
+  sku            String?     @unique // vendor 品號 — duplicate detection for xlsx import
+  barcode        String? // vendor 國際條碼
+  isPreorder     Boolean     @default(false)
+  arrivalNote    String? // e.g. "3月上旬" — expected arrival for pre-order products
   priceItems     PriceItem[]
   reviews        Review[]
 }

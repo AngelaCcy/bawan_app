@@ -6,6 +6,7 @@ import { Navigation, Thumbs, FreeMode } from "swiper/modules";
 import Image from "next/image";
 import { useState } from "react";
 import type { Swiper as SwiperType } from "swiper";
+import { productImageSrc } from "@/lib/utils";
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/free-mode";
@@ -19,22 +20,25 @@ type Props = {
 
 export default function ProductImageCarousel({ images, brand }: Props) {
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperType | null>(null);
+  // Imported products may have no image — show the placeholder instead of
+  // an empty carousel ("" makes productImageSrc fall back to it)
+  const displayImages = images.length > 0 ? images : [""];
 
   return (
     <div className="w-full">
       {/* Main Image Swiper */}
       <Swiper
         spaceBetween={10}
-        navigation={images.length > 1}
-        thumbs={images.length > 1 ? { swiper: thumbsSwiper } : undefined}
+        navigation={displayImages.length > 1}
+        thumbs={displayImages.length > 1 ? { swiper: thumbsSwiper } : undefined}
         modules={[FreeMode, Navigation, Thumbs]}
         className="w-full mb-2"
-        loop={images.length > 1}
+        loop={displayImages.length > 1}
       >
-        {images.map((fileName, idx) => (
+        {displayImages.map((fileName, idx) => (
           <SwiperSlide key={idx}>
             <Image
-              src={`/img/${brand}/${fileName}`}
+              src={productImageSrc(brand, fileName)}
               alt={`Product image ${idx + 1}`}
               width={400}
               height={400}
@@ -50,15 +54,15 @@ export default function ProductImageCarousel({ images, brand }: Props) {
           onSwiper={setThumbsSwiper}
           loop={false}
           spaceBetween={2}
-          slidesPerView={Math.min(images.length, 4)}
+          slidesPerView={Math.min(displayImages.length, 4)}
           watchSlidesProgress
           modules={[FreeMode, Navigation, Thumbs]}
           className="w-max"
         >
-          {images.map((fileName, idx) => (
+          {displayImages.map((fileName, idx) => (
             <SwiperSlide key={`thumb-${idx}`} className="cursor-pointer">
               <Image
-                src={`/img/${brand}/${fileName}`}
+                src={productImageSrc(brand, fileName)}
                 alt={`Thumbnail ${idx + 1}`}
                 width={80}
                 height={100}

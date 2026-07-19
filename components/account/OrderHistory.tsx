@@ -6,6 +6,7 @@ import { getUserOrders } from "@/app/utils/actions";
 import { format } from "date-fns";
 import { Package } from "lucide-react";
 import Image from "next/image";
+import { productImageSrc } from "@/lib/utils";
 
 type OrderWithItems = Order & { items: OrderItem[] };
 
@@ -69,7 +70,7 @@ export default function OrderHistory() {
                 <div key={item.id} className="flex gap-3 items-center">
                   {item.image ? (
                     <Image
-                      src={item.image}
+                      src={productImageSrc(item.brand, item.image)}
                       alt={item.name}
                       width={56}
                       height={56}
