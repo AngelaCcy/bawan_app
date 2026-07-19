@@ -398,6 +398,43 @@ export async function updateUserRole(userId: string, role: Role) {
   return prisma.user.update({ where: { id: userId }, data: { role } });
 }
 
+// ─── Landing page actions ─────────────────────────────────────────────────────
+
+export async function getTopProducts() {
+  return prisma.product.findMany({
+    take: 10,
+    orderBy: { id: "desc" },
+    include: { priceItems: { include: { salePrices: true } } },
+  });
+}
+
+export async function getSaleEndTime(): Promise<Date | null> {
+  const now = new Date();
+  const sale = await prisma.salePrice.findFirst({
+    where: {
+      startsAt: { lte: now },
+      endsAt: { gt: now }, // only dated sales — perpetual sales (endsAt: null) have no countdown
+    },
+    orderBy: { endsAt: "asc" },
+    select: { endsAt: true },
+  });
+  return sale?.endsAt ?? null;
+}
+
+export async function getNewestProduct() {
+  return prisma.product.findFirst({
+    orderBy: { id: "desc" },
+    include: { priceItems: { include: { salePrices: true } } },
+  });
+}
+
+export async function getEssensorieProducts() {
+  return prisma.product.findMany({
+    where: { brand: "ESSENSORIE" },
+    include: { priceItems: { include: { salePrices: true } } },
+  });
+}
+
 // ─── Avatar ──────────────────────────────────────────────────────────────────
 
 export async function updateUserAvatar(imageUrl: string) {
